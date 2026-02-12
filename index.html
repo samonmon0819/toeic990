@@ -1,0 +1,1951 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>TOEIC単語990　単語帳＆テスト</title>
+<style>
+  :root {
+    --primary: #007AFF; /* iOS Blue */
+    --primary-bg: #F2F2F7;
+    --accent: #FF9500;
+    --bg: #FFFFFF;
+    --card: #FFFFFF;
+    --text-main: #000000;
+    --text-sub: #8E8E93;
+    --border: #C6C6C8;
+    --wrong: #FF3B30;
+    --correct: #34C759;
+    --safe-top: env(safe-area-inset-top);
+    --safe-bottom: env(safe-area-inset-bottom);
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", Roboto, sans-serif;
+    background: var(--primary-bg);
+    color: var(--text-main);
+    margin: 0;
+    padding: 0;
+    overscroll-behavior-y: none; 
+  }
+
+  .container {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    background: var(--card);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: calc(20px + var(--safe-bottom));
+  }
+
+  .content-padding {
+    padding: 20px 20px calc(80px + var(--safe-bottom)) 20px;
+  }
+
+  /* タイトルエリア */
+  .home-header {
+    padding-top: calc(20px + var(--safe-top));
+    padding-bottom: 20px;
+    background: var(--bg);
+    text-align: center;
+  }
+
+  h1 {
+    font-size: 28px;
+    margin: 0;
+    font-weight: 800;
+    color: var(--text-main);
+    letter-spacing: -0.5px;
+  }
+  .subtitle {
+    color: var(--text-sub);
+    font-size: 13px;
+    margin-top: 5px;
+    font-weight: 500;
+  }
+
+  /* メニューグリッド */
+  .menu-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 10px;
+  }
+  
+  .menu-btn {
+    background: #ffffff;
+    border: none;
+    padding: 20px 15px;
+    border-radius: 18px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: transform 0.1s;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+  .menu-btn:active { transform: scale(0.96); background: #f2f2f7; }
+  
+  .menu-btn.large {
+    grid-column: span 2;
+    background: #E5F1FF;
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+    padding: 25px 20px;
+  }
+
+  .menu-title {
+    display: block;
+    font-weight: 700;
+    font-size: 17px;
+    color: var(--primary);
+    margin-bottom: 4px;
+  }
+  .menu-desc { font-size: 12px; color: var(--text-sub); line-height: 1.3; }
+
+  /* 苦手ボックス */
+  .weak-box {
+    background: #FFF5F5;
+    padding: 20px;
+    border-radius: 18px;
+    text-align: center;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(255, 59, 48, 0.05);
+  }
+  .weak-count {
+    font-size: 48px;
+    font-weight: 800;
+    color: var(--wrong);
+    display: block;
+    line-height: 1;
+    margin: 5px 0 15px 0;
+  }
+  .weak-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  /* 共通ボタン */
+  .btn-action {
+    background: var(--primary);
+    color: white;
+    border: none;
+    font-weight: 600;
+    padding: 14px;
+    border-radius: 14px;
+    font-size: 16px;
+    width: 100%;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 122, 255, 0.2);
+  }
+  .btn-action:active { opacity: 0.8; transform: translateY(1px); }
+  .btn-action.secondary { background: var(--text-sub); box-shadow: none; }
+  .btn-action.danger { background: var(--accent); box-shadow: 0 4px 10px rgba(255, 149, 0, 0.2); }
+
+  /* --- STICKY HEADER & SEARCH --- */
+  .sticky-wrapper {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 0.5px solid rgba(0,0,0,0.1);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+  }
+  
+  .header-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: calc(10px + var(--safe-top)) 15px 10px 15px;
+    height: calc(54px + var(--safe-top));
+  }
+  
+  .back-btn {
+    font-size: 17px;
+    color: var(--primary);
+    background: none;
+    border: none;
+    padding: 10px 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .header-title { font-weight: 600; font-size: 17px; }
+
+  .search-area {
+    padding: 0 15px 15px 15px;
+  }
+
+  .input-wrapper {
+    background: #E3E3E8;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    margin-bottom: 10px;
+  }
+  .search-icon { color: #8E8E93; font-size: 16px; margin-right: 5px; }
+  
+  .search-input {
+    width: 100%;
+    padding: 10px 5px;
+    border: none;
+    background: transparent;
+    font-size: 16px;
+    outline: none;
+    height: 44px;
+  }
+  
+  select.search-input {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23007AFF'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0px center;
+    background-size: 24px;
+  }
+
+  .mask-controls {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+  }
+  .mask-controls::-webkit-scrollbar { display: none; }
+
+  .mask-btn {
+    flex: 1;
+    white-space: nowrap;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 16px;
+    background: #F2F2F7;
+    color: var(--text-main);
+    border: none;
+    transition: 0.2s;
+    min-height: 36px;
+  }
+  .mask-btn.active {
+    background: var(--text-main);
+    color: white;
+  }
+  .mask-btn.hint-toggle-btn.active {
+    background: var(--accent);
+    color: white;
+  }
+
+  /* リスト表示 */
+  .list-container {
+    padding: 0 20px;
+  }
+  .list-item {
+    padding: 16px 0;
+    border-bottom: 0.5px solid rgba(0,0,0,0.1);
+  }
+  
+  .list-id-top {
+    font-size: 11px;
+    color: var(--text-sub);
+    font-weight: 600;
+    margin-bottom: 4px;
+    display: block;
+    letter-spacing: 0.5px;
+  }
+
+  .list-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+  
+  .list-en {
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--text-main);
+    letter-spacing: -0.3px;
+  }
+  
+  .audio-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #E5F1FF;
+    color: var(--primary);
+    border: none;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+  .audio-btn:active { transform: scale(0.9); background: #d1e3fa; }
+
+  .list-jp {
+    font-size: 15px;
+    color: #3A3A3C;
+    line-height: 1.5;
+    margin-top: 4px;
+  }
+  
+  /* Hint & Button Wrapper */
+  .hint-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-top: 8px;
+    gap: 10px;
+  }
+
+  .list-hint {
+    font-size: 13px;
+    color: #856404;
+    background: #FFF3CD;
+    padding: 8px 12px;
+    border-radius: 8px;
+    line-height: 1.4;
+    flex: 1; /* Take remaining space */
+  }
+  .list-hint.hidden { display: none; }
+
+  /* マスク機能 */
+  .masked {
+    background-color: #E5E5EA;
+    color: transparent !important;
+    border-radius: 6px;
+    user-select: none;
+  }
+  .masked.revealed {
+    background-color: transparent;
+    color: inherit !important;
+  }
+
+  .weak-add-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--wrong);
+    background: #FFF0F0;
+    border: none;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap; /* 折り返し防止 */
+    height: 34px; /* 高さ合わせ */
+    margin-left: auto; /* 右寄せ */
+  }
+
+  /* クイズ画面 */
+  .quiz-card {
+    text-align: center;
+    margin-top: 20px;
+  }
+  .word-display {
+    padding: 40px 0;
+  }
+  .word-text {
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 10px;
+    color: var(--text-main);
+  }
+  .word-id {
+    font-size: 13px;
+    color: var(--text-sub);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  .option-btn {
+    display: block;
+    width: 100%;
+    padding: 18px;
+    margin-bottom: 12px;
+    background: #ffffff;
+    border: 1px solid #E5E5EA;
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-main);
+    text-align: left;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+    transition: 0.1s;
+  }
+  .option-btn:active { background: #f2f2f7; transform: scale(0.98); }
+  .option-btn.correct { background: #E8FAEB; border-color: var(--correct); color: #1D8536; }
+  .option-btn.wrong { background: #FFEBEA; border-color: var(--wrong); color: #C41C10; }
+
+  .hidden { display: none !important; }
+  .safe-area-spacer { height: calc(20px + var(--safe-bottom)); }
+
+</style>
+</head>
+<body>
+
+<div class="container">
+  
+  <div id="home-screen" class="content-padding">
+    <div class="home-header">
+      <h1>TOEIC単語 990</h1>
+      <p class="subtitle">まずはありがとう。</p>
+    </div>
+    
+    <div class="weak-box">
+      <div class="weak-title">苦手な単語</div>
+      <span class="weak-count" id="weak-count">0</span>
+      <div class="weak-actions">
+        <button class="btn-action danger" onclick="startWeakMode()">🔥 苦手特訓</button>
+        <button class="btn-action secondary" onclick="showList('weak')">📖 リスト</button>
+      </div>
+    </div>
+
+    <div class="menu-grid">
+      <div class="menu-btn large" onclick="showSearch()">
+        <div>
+          <span class="menu-title">📖 単語帳 & 辞書</span>
+          <span class="menu-desc">範囲指定・発音・暗記シート</span>
+        </div>
+        <span style="font-size:30px;">🔍</span>
+      </div>
+      <div class="menu-btn" onclick="showLevels(10)">
+        <span style="font-size:24px; margin-bottom:5px;">⚡️</span>
+        <span class="menu-title">10問</span>
+        <span class="menu-desc">サクッと</span>
+      </div>
+      <div class="menu-btn" onclick="showLevels(50)">
+        <span style="font-size:24px; margin-bottom:5px;">📚</span>
+        <span class="menu-title">50問</span>
+        <span class="menu-desc">じっくり</span>
+      </div>
+      <div class="menu-btn" onclick="startRandom()" style="grid-column: span 2;">
+        <span class="menu-title">🎲 全990語からランダムテスト</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="search-screen" class="hidden">
+    <div class="sticky-wrapper" id="sticky-header">
+      <div class="header-nav">
+        <button class="back-btn" onclick="goHome()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          ホーム
+        </button>
+        <span class="header-title">単語帳</span>
+        <div style="width:60px;"></div>
+      </div>
+      
+      <div class="search-area">
+        <div class="input-wrapper">
+          <select id="range-filter" class="search-input" onchange="applyFilters()">
+            </select>
+        </div>
+        <div class="input-wrapper">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="search-input" class="search-input" placeholder="単語または意味を検索" oninput="applyFilters()">
+        </div>
+        
+        <div class="mask-controls">
+          <button class="mask-btn active" id="mask-none" onclick="setMaskMode('none')">全表示</button>
+          <button class="mask-btn" id="mask-en" onclick="setMaskMode('en')">英語隠す</button>
+          <button class="mask-btn" id="mask-jp" onclick="setMaskMode('jp')">意味隠す</button>
+          <button class="mask-btn hint-toggle-btn" id="hint-toggle" onclick="toggleListHints()">💡ヒント</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="list-container" id="search-results">
+      </div>
+    <div class="safe-area-spacer"></div>
+  </div>
+
+  <div id="level-screen" class="hidden content-padding">
+    <div class="home-header">
+      <button class="back-btn" onclick="goHome()" style="justify-content: center;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        戻る
+      </button>
+      <h2>コース選択</h2>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:20px;" id="level-list"></div>
+  </div>
+
+  <div id="quiz-screen" class="hidden content-padding">
+    <div class="home-header" style="display:flex; justify-content:space-between; padding-bottom:10px;">
+      <button class="back-btn" onclick="goHome()">中断</button>
+      <span style="font-weight:bold; color:var(--text-sub);" id="progress">1 / 10</span>
+      <div style="width:50px;"></div>
+    </div>
+    
+    <div class="quiz-card">
+      <span class="word-id" id="q-id">No.001</span>
+      <div class="word-display">
+        <div class="word-text" id="q-text">word</div>
+        <button class="audio-btn" onclick="speakCurrentQ()" style="margin:0 auto; width:50px; height:50px; font-size:24px;">🔊</button>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-bottom:20px; min-height:40px;">
+      <button id="hint-btn" onclick="toggleHint()" style="background:none; border:none; color:var(--accent); font-weight:bold; cursor:pointer; font-size:15px;">
+        💡 ヒントを見る
+      </button>
+      <div id="hint-content" style="display:none; background:#FFF3CD; padding:15px; border-radius:12px; color:#856404; font-size:14px; text-align:left;"></div>
+    </div>
+
+    <div id="options"></div>
+
+    <div id="feedback" style="display:none; margin-top:20px; padding:20px; background:var(--bg); border-radius:18px; border:1px solid var(--border); text-align:center;">
+      <div id="fb-msg" style="font-size:24px; font-weight:800; margin-bottom:10px;"></div>
+      <div style="background:#F2F2F7; padding:15px; border-radius:12px; text-align:left; margin-bottom:20px;">
+        <div style="font-size:12px; color:var(--text-sub); font-weight:bold;">正解の意味</div>
+        <div id="fb-correct" style="font-size:16px; font-weight:bold; color:var(--text-main);"></div>
+        <div id="fb-hint" style="font-size:14px; color:var(--text-main); margin-top:8px;"></div>
+      </div>
+      <button class="btn-action" onclick="nextQ()">次へ進む ➔</button>
+    </div>
+  </div>
+
+  <div id="result-screen" class="hidden content-padding" style="text-align:center; padding-top:60px;">
+    <h2 style="color:var(--text-sub); margin-bottom:10px;">RESULT</h2>
+    <div style="font-size:80px; font-weight:900; color:var(--primary); line-height:1; margin:20px 0;" id="final-score">10</div>
+    <p id="result-msg" style="color:var(--text-main); font-size:18px; font-weight:bold; margin-bottom:40px;"></p>
+    <div id="weak-msg" style="color:var(--accent); font-weight:bold; background:#FFF5F5; padding:20px; border-radius:14px; margin-bottom:40px; font-size:14px;"></div>
+    <button class="btn-action" onclick="goHome()">ホームに戻る</button>
+  </div>
+
+  <div id="list-screen" class="hidden">
+    <div class="sticky-wrapper">
+      <div class="header-nav">
+        <button class="back-btn" onclick="goHome()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          ホーム
+        </button>
+        <span class="header-title">苦手リスト</span>
+        <div style="width:60px;"></div>
+      </div>
+    </div>
+    <div class="list-container" id="list-content" style="padding-top:20px;"></div>
+    <div class="safe-area-spacer"></div>
+  </div>
+</div>
+
+<script>
+// --- DATA PART 1 (1-250) ---
+const dataPart1 = [
+{id:1,en:"product",jp:"製品",hint:"pro(前へ) + duct(導く) ⇒ 生み出されたもの"},
+{id:2,en:"employ",jp:"雇う",hint:"in(中に) + ploy(巻き込む) ⇒ 雇用する"},
+{id:3,en:"business",jp:"会社",hint:"busy(忙しい)状態 ⇒ 仕事・事業"},
+{id:4,en:"customer",jp:"客",hint:"custom(慣習) ⇒ お店に習慣的に来る人"},
+{id:5,en:"monthly",jp:"毎月",hint:"month(月) + ly(毎〜)"},
+{id:6,en:"report",jp:"報告書",hint:"re(戻って) + port(運ぶ) ⇒ 情報を持ち帰る"},
+{id:7,en:"schedule",jp:"予定に入れる",hint:"sch(切る) ⇒ 時間を区切った紙 ⇒ 予定表"},
+{id:8,en:"mail",jp:"郵送する",hint:"Eメールだけでなく「郵便物」全般を指す"},
+{id:9,en:"receive",jp:"受け取る",hint:"re(受け) + ceive(取る) ⇒ レシーブ"},
+{id:10,en:"visitor",jp:"観光客",hint:"visit(訪問する) + or(人)"},
+{id:11,en:"design",jp:"設計する",hint:"de(明確に) + sign(印す) ⇒ 設計図を描く"},
+{id:12,en:"repair",jp:"修理する",hint:"re(再び) + pair(準備する) ⇒ 使える状態に戻す"},
+{id:13,en:"conference",jp:"会議",hint:"con(共に) + fer(運ぶ) ⇒ 意見を持ち寄る場"},
+{id:14,en:"available",jp:"入手できる",hint:"avail(役に立つ) + able ⇒ 利用できる"},
+{id:15,en:"travel",jp:"旅行する",hint:"trouble(トラブル)と同語源。昔の旅は困難だった"},
+{id:16,en:"discuss",jp:"話し合う",hint:"dis(離れて) + cuss(揺らす) ⇒ 議論を戦わせる"},
+{id:17,en:"department",jp:"部",hint:"de(分離) + part(部分) ⇒ 分けられた部署"},
+{id:18,en:"park",jp:"駐車する",hint:"公園(park)のような囲い ⇒ 車を留める"},
+{id:19,en:"expect",jp:"待つ・期待する",hint:"ex(外を) + pect(見る) ⇒ 首を長くして待つ"},
+{id:20,en:"order",jp:"注文",hint:"順序(order)正しく並べる ⇒ 秩序・命令・注文"},
+{id:21,en:"busy",jp:"込んでいる",hint:"店が忙しい ＝ 客で混んでいる"},
+{id:22,en:"contact",jp:"連絡する",hint:"con(共に) + tact(触れる) ⇒ 接触する"},
+{id:23,en:"leave",jp:"辞める・出発する",hint:"その場を離れる ⇒ 去る・残す"},
+{id:24,en:"board",jp:"乗り込む",hint:"甲板(board)に上がる ⇒ 搭乗する"},
+{id:25,en:"hour",jp:"営業時間",hint:"business hours の略"},
+{id:26,en:"line",jp:"列",hint:"リネン(linen)製の糸 ⇒ 線・列"},
+{id:27,en:"attend",jp:"出席する",hint:"at(〜へ) + tend(足を伸ばす) ⇒ 出向く"},
+{id:28,en:"item",jp:"品物",hint:"iter(旅) ⇒ 旅行の工程項目 ⇒ 品目"},
+{id:29,en:"purpose",jp:"目的",hint:"pur(前へ) + pose(置く) ⇒ 前に置いた目標"},
+{id:30,en:"hold",jp:"持つ",hint:"維持する。電話を切らずに待つ、会を催す"},
+{id:31,en:"sure",jp:"確かな",hint:"se(心配) + cure(ない) ⇒ 心配ない・確実な"},
+{id:32,en:"increase",jp:"増える",hint:"in(中に) + crease(成長) ⇒ 増加"},
+{id:33,en:"let",jp:"〜させる",hint:"Let's (〜しましょう) のLet。許す・させる"},
+{id:34,en:"museum",jp:"博物館",hint:"muse(女神ミューズ)の場所"},
+{id:35,en:"tour",jp:"見学",hint:"ツアー(周遊)"},
+{id:36,en:"wear",jp:"身に着けている",hint:"ウェア(着る) ※状態を表す"},
+{id:37,en:"position",jp:"職",hint:"ポジション(位置・地位)"},
+{id:38,en:"return",jp:"返す",hint:"re(戻る) + turn(向く) ⇒ 戻す"},
+{id:39,en:"interested",jp:"興味がある",hint:"interest(関心)がある"},
+{id:40,en:"president",jp:"社長",hint:"pre(前に) + sid(座る) ⇒ トップに座る人"},
+{id:41,en:"print",jp:"印刷する",hint:"pre(前) + int(押し付ける) ⇒ 痕跡を残す"},
+{id:42,en:"look forward to",jp:"楽しみにする",hint:"未来の方(forward)を見る ⇒ 待ち望む"},
+{id:43,en:"on sale",jp:"売られている",hint:"販売中(sale)"},
+{id:44,en:"follow",jp:"従う",hint:"フォローする・ついて行く"},
+{id:45,en:"message",jp:"伝言",hint:"メッセージ"},
+{id:46,en:"presentation",jp:"プレゼン",hint:"present(提示する)こと"},
+{id:47,en:"sign",jp:"標識",hint:"サイン(印・記号)"},
+{id:48,en:"break",jp:"休憩",hint:"仕事をブレイク(中断)する"},
+{id:49,en:"document",jp:"書類",hint:"ドキュメント"},
+{id:50,en:"in front of",jp:"〜の前に",hint:"フロント(正面)に"},
+{id:51,en:"kind",jp:"種類",hint:"a kind of (〜の一種)"},
+{id:52,en:"head",jp:"長・率いる",hint:"ヘッド(頭) ⇒ 組織のトップ"},
+{id:53,en:"important",jp:"重要な",hint:"import(輸入)する価値がある ⇒ 重要"},
+{id:54,en:"equipment",jp:"機器",hint:"equip(装備する)もの"},
+{id:55,en:"ship",jp:"発送する",hint:"ship(船)で送る ⇒ 出荷する"},
+{id:56,en:"arrive",jp:"届く",hint:"a(〜へ) + rive(岸) ⇒ 岸に着く"},
+{id:57,en:"holiday",jp:"休暇",hint:"holy(神聖な) + day(日) ⇒ 休日"},
+{id:58,en:"prepare",jp:"準備をする",hint:"pre(前もって) + pare(整える)"},
+{id:59,en:"furniture",jp:"家具",hint:"furnish(備え付ける)もの"},
+{id:60,en:"online",jp:"オンラインで",hint:"回線(line)がつながって(on)"},
+{id:61,en:"stay",jp:"泊まる",hint:"stand(立つ) + lay(置く) ⇒ その場に留まる"},
+{id:62,en:"article",jp:"記事",hint:"art(技術)で書かれた小さいもの"},
+{id:63,en:"during",jp:"〜の間",hint:"endure(耐える)と同語源。期間中ずっと"},
+{id:64,en:"industry",jp:"産業",hint:"industrious(勤勉な)人が働くこと"},
+{id:65,en:"prefer",jp:"好む",hint:"pre(前に) + fer(運ぶ) ⇒ 他より優先する"},
+{id:66,en:"either",jp:"または",hint:"either A or B (AかBか)"},
+{id:67,en:"different",jp:"異なる",hint:"dif(離れて) + fer(運ぶ) ⇒ 別々になる"},
+{id:68,en:"record",jp:"記録",hint:"re(再び) + cord(心) ⇒ 心に留める"},
+{id:69,en:"usually",jp:"普通は",hint:"usual(いつもの) + ly"},
+{id:70,en:"international",jp:"国際的な",hint:"inter(〜の間) + national(国の)"},
+{id:71,en:"study",jp:"調査",hint:"strive(努力する) ⇒ 熱心に励む ⇒ 研究・調査"},
+{id:72,en:"enter",jp:"入る",hint:"inter(中に)入る ⇒ エントリー"},
+{id:73,en:"put on",jp:"身に着ける",hint:"身の上に(on)置く(put) ⇒ 着る(動作)"},
+{id:74,en:"make sure",jp:"必ず〜する",hint:"sure(確実)な状態を作る(make)"},
+{id:75,en:"decide",jp:"決める",hint:"de(離れて) + cide(切る) ⇒ 迷いを断つ"},
+{id:76,en:"expensive",jp:"値段が高い",hint:"ex(外へ) + pense(払う) ⇒ 金が出ていく"},
+{id:77,en:"resume",jp:"履歴書",hint:"レジュメ。re(再び) + sume(取る)で「再開する」の意味も"},
+{id:78,en:"surprised",jp:"驚いた",hint:"サプライズ(驚き)を受けた"},
+{id:79,en:"bill",jp:"請求書",hint:"bulla(印章) ⇒ 公文書 ⇒ 請求書・紙幣"},
+{id:80,en:"community",jp:"共同体",hint:"com(共に) + muni(奉仕) ⇒ 地域社会"},
+{id:81,en:"handle",jp:"行う・扱う",hint:"hand(手)でどうにかする ⇒ 対処する"},
+{id:82,en:"advice",jp:"助言",hint:"ad(〜へ) + vis(見る) ⇒ 見方を与える"},
+{id:83,en:"discount",jp:"割引",hint:"count(勘定)からdis(外す)"},
+{id:84,en:"hand",jp:"渡す",hint:"手(hand)渡す"},
+{id:85,en:"stop by",jp:"立ち寄る",hint:"そばに(by)止まる(stop)"},
+{id:86,en:"tourist",jp:"観光客",hint:"tour(旅行) + ist(人)"},
+{id:87,en:"turn off",jp:"消す",hint:"回して(turn)離す(off) ⇒ スイッチを切る"},
+{id:88,en:"additional",jp:"追加の",hint:"add(加える) + tional"},
+{id:89,en:"pleased", jp:"喜んだ", hint:"please(喜ばせる)された状態"},
+{id:90,en:"store",jp:"保管する",hint:"店(store)に貯蔵する"},
+{id:91,en:"manage",jp:"やり遂げる",hint:"man(手)で馬を御する ⇒ 何とか処理する"},
+{id:92,en:"marketing",jp:"マーケティング",hint:"market(市場) + ing(活動)"},
+{id:93,en:"include",jp:"含む",hint:"in(中に) + clude(閉じる) ⇒ 含める"},
+{id:94,en:"last",jp:"続く",hint:"last(最後)まで残る ⇒ 持続する"},
+{id:95,en:"opening",jp:"空き",hint:"open(開いている)場所 ⇒ 欠員・開店"},
+{id:96,en:"direction",jp:"道案内",hint:"direct(方向を示す)こと"},
+{id:97,en:"cost",jp:"費用がかかる",hint:"con(共に) + sta(立つ) ⇒ 確定した犠牲・費用"},
+{id:98,en:"apply",jp:"応募する",hint:"ap(〜へ) + ply(折る＝重ねる) ⇒ 書類を重ねて申請"},
+{id:99,en:"find",jp:"思う・見つける",hint:"気づく、わかる"},
+{id:100,en:"book",jp:"予約する",hint:"帳簿(book)に名前を載せる"},
+{id:101,en:"place",jp:"出す",hint:"place an order (注文を置く＝出す)"},
+{id:102,en:"deliver",jp:"配達する",hint:"de(離れて) + liver(自由) ⇒ 解き放つ ⇒ 届ける"},
+{id:103,en:"experience",jp:"経験する",hint:"ex(外へ) + per(試す) ⇒ 経験"},
+{id:104,en:"complete",jp:"完成させる",hint:"com(完全に) + plete(満たす)"},
+{id:105,en:"quality",jp:"質の高い",hint:"qual(どのような) ⇒ どのような性質か ⇒ 品質"},
+{id:106,en:"develop",jp:"開発する",hint:"de(包みを) + velop(開く) ⇒ 発展させる"},
+{id:107,en:"accounting",jp:"会計",hint:"account(計算・口座) + ing"},
+{id:108,en:"survey",jp:"調査",hint:"sur(上から) + vey(見る) ⇒ 見渡す"},
+{id:109,en:"arrange",jp:"整える",hint:"a(〜へ) + range(列) ⇒ 並べる・手配する"},
+{id:110,en:"right away",jp:"すぐに",hint:"away(迷わず) right(正に)今 ⇒ 即座に"},
+{id:111,en:"current",jp:"現在の",hint:"cur(走る) ⇒ 流れている ⇒ 流行の・現在の"},
+{id:112,en:"recently",jp:"最近",hint:"recent(最近の) + ly"},
+{id:113,en:"research",jp:"調査",hint:"re(再び) + search(探す)"},
+{id:114,en:"successful",jp:"成功している",hint:"success(成功) + ful(満ちた)"},
+{id:115,en:"lead",jp:"率いる",hint:"load(道案内)と関連。リーダーの動詞"},
+{id:116,en:"address",jp:"話をする",hint:"ad(〜へ) + dress(まっすぐ向ける) ⇒ 演説する・住所"},
+{id:117,en:"in person",jp:"直接",hint:"person(人)としてその場にいる ⇒ 対面で"},
+{id:118,en:"request",jp:"求める",hint:"re(再び) + quest(求める)"},
+{id:119,en:"select",jp:"選ぶ",hint:"se(離れて) + lect(選ぶ) ⇒ 選び出す"},
+{id:120,en:"exhibit",jp:"展覧会",hint:"ex(外へ) + hibit(持つ) ⇒ 出して見せる"},
+{id:121,en:"package",jp:"小包",hint:"pack(包む) + age(もの)"},
+{id:122,en:"assistant",jp:"アシスタント",hint:"assist(助ける)人"},
+{id:123,en:"contract",jp:"契約",hint:"con(共に) + tract(引く) ⇒ 引き合う合意書"},
+{id:124,en:"fully",jp:"完全に",hint:"full(いっぱい) + ly"},
+{id:125,en:"supply",jp:"供給",hint:"sup(下に) + ply(満たす) ⇒ 必要なものを満たす"},
+{id:126,en:"fill out",jp:"記入する",hint:"fill(満たす) + out(外まで完全に) ⇒ 全部埋める"},
+{id:127,en:"total",jp:"合計",hint:"tot(すべて) + al"},
+{id:128,en:"construction",jp:"建設",hint:"con(共に) + struct(積む) ⇒ 建設"},
+{id:129,en:"introduce",jp:"紹介する",hint:"intro(中へ) + duce(導く) ⇒ 引き合わせる"},
+{id:130,en:"list",jp:"載せる",hint:"リストに載せる"},
+{id:131,en:"public",jp:"一般の人",hint:"popul(人々)の ⇒ 公衆"},
+{id:132,en:"rate",jp:"料金",hint:"rational(理性の) ⇒ 計算された比率・料金"},
+{id:133,en:"due",jp:"期限である",hint:"de(借りている) ⇒ 支払うべき"},
+{id:134,en:"hire",jp:"雇う",hint:"ハイヤー(雇われた車)"},
+{id:135,en:"in charge of",jp:"担当して",hint:"charge(荷物・責任)の中にいる"},
+{id:136,en:"material",jp:"資材",hint:"matter(物質) + ial ⇒ 材料・資料"},
+{id:137,en:"performance",jp:"公演",hint:"per(完全に) + form(形作る) ⇒ 実行・公演"},
+{id:138,en:"proposal",jp:"提案",hint:"propose(プロポーズ・提案)の名詞"},
+{id:139,en:"set up",jp:"設定する",hint:"据え(set)上げる(up) ⇒ 設立・準備する"},
+{id:140,en:"in advance",jp:"事前に",hint:"advance(前進)した位置で ⇒ 前もって"},
+{id:141,en:"confirm",jp:"確認する",hint:"con(完全に) + firm(固い) ⇒ 固めて確定する"},
+{id:142,en:"cover",jp:"報道する",hint:"全体を覆う(cover) ⇒ 範囲に含める・取材する"},
+{id:143,en:"estimate",jp:"見積もり",hint:"estim(価値) + ate(する) ⇒ 価値を計算する"},
+{id:144,en:"participate",jp:"参加する",hint:"part(部分) + cip(取る) ⇒ 役割を受け持つ"},
+{id:145,en:"reservation",jp:"予約",hint:"re(後に) + serv(保つ) ⇒ 取り置き"},
+{id:146,en:"annual",jp:"毎年の",hint:"ann(年) + ual ⇒ アニバーサリーのann"},
+{id:147,en:"create",jp:"作り出す",hint:"ker(成長する) ⇒ 新たに生み出す"},
+{id:148,en:"note",jp:"注意する",hint:"know(知る)と同語源。心に留める"},
+{id:149,en:"facility",jp:"施設",hint:"facil(容易な) ⇒ 物事をスムーズに行う場所"},
+{id:150,en:"mention",jp:"言う",hint:"men(心) ⇒ 心に留めさせる ⇒ 言及する"},
+{id:151,en:"registration",jp:"登録",hint:"regest(記録) ⇒ 登録"},
+{id:152,en:"respond",jp:"返答する",hint:"re(送り返す) + spond(約束) ⇒ 応答する"},
+{id:153,en:"excellent",jp:"素晴らしい",hint:"ex(外へ) + cel(高く上がる) ⇒ 抜きん出た"},
+{id:154,en:"improve",jp:"向上させる",hint:"im(中へ) + prove(利益) ⇒ 価値を高める"},
+{id:155,en:"issue",jp:"問題",hint:"is(外へ) + sue(行く) ⇒ 出てきた問題・発行物"},
+{id:156,en:"limited",jp:"限られた",hint:"リミット(限界)のある"},
+{id:157,en:"promote",jp:"昇進させる",hint:"pro(前へ) + mote(動かす) ⇒ 前に進める"},
+{id:158,en:"take place",jp:"行われる",hint:"場所(place)を占める(take) ⇒ 開催される"},
+{id:159,en:"call off",jp:"中止する",hint:"大声で(call)離れる(off)よう言う"},
+{id:160,en:"according to",jp:"〜によると",hint:"accord(一致) + to ⇒ 〜に合わせて"},
+{id:161,en:"operates",jp:"運営する",hint:"opus(仕事)をする ⇒ 運営・操作する"},
+{id:162,en:"post",jp:"掲示する",hint:"ポスト(柱)に貼る"},
+{id:163,en:"present",jp:"見せる",hint:"プレゼント(目の前にある) ⇒ 提示する"},
+{id:164,en:"reason",jp:"理由",hint:"リーズナブル(理にかなった)の元"},
+{id:165,en:"committee",jp:"委員会",hint:"com(共に) + mit(送る) ⇒ 委任された人たち"},
+{id:166,en:"file",jp:"整理する",hint:"fil(糸) ⇒ 糸で綴じて整理する"},
+{id:167,en:"invitation",jp:"招待状",hint:"invite(招待する)の名詞"},
+{id:168,en:"maintenance",jp:"保守点検",hint:"main(手) + ten(保つ) ⇒ メンテナンス"},
+{id:169,en:"opportunity",jp:"機会",hint:"op(〜へ) + port(港) ⇒ 港に着く好機"},
+{id:170,en:"reduce",jp:"下げる",hint:"re(後ろへ) + duce(導く) ⇒ 減らす"},
+{id:171,en:"representative",jp:"代表者",hint:"re(再び) + present(提示する) ⇒ 代表して出る人"},
+{id:172,en:"support",jp:"支援する",hint:"sup(下から) + port(運ぶ/支える)"},
+{id:173,en:"charge",jp:"請求する",hint:"car(車)に荷物を積む ⇒ 負担・請求・責任"},
+{id:174,en:"interview",jp:"面接する",hint:"inter(互いに) + view(見る)"},
+{id:175,en:"satisfied",jp:"満足した",hint:"satis(満たす) + fied ⇒ 満足させられた"},
+{id:176,en:"suggestion",jp:"提案",hint:"sug(下から) + gest(運ぶ) ⇒ 控えめな提案"},
+{id:177,en:"across",jp:"向こう側に",hint:"cross(十字・交差)して向こうへ"},
+{id:178,en:"historical",jp:"歴史に関する",hint:"ヒストリー(歴史)の"},
+{id:179,en:"manufacturer",jp:"製造業者",hint:"manu(手) + fact(作る) ⇒ メーカー"},
+{id:180,en:"consultant",jp:"コンサルタント",hint:"consult(相談する)人"},
+{id:181,en:"appointment",jp:"予約",hint:"point(指す) ⇒ 会う地点を決める ⇒ アポ"},
+{id:182,en:"fit",jp:"入れる",hint:"fyt(適した) ⇒ 寸法が合う"},
+{id:183,en:"inform",jp:"知らせる",hint:"in(中に) + form(形) ⇒ 頭の中に形作る"},
+{id:184,en:"advertise",jp:"宣伝する",hint:"ad(〜へ) + vert(向く) ⇒ 人の気を向かせる"},
+{id:185,en:"provide",jp:"提供する",hint:"pro(前もって) + vide(見る) ⇒ 準備しておく"},
+{id:186,en:"review",jp:"検討する",hint:"re(再び) + view(見る) ⇒ 再考する"},
+{id:187,en:"editor",jp:"編集者",hint:"edit(編集) + or(人)"},
+{id:188,en:"corporate",jp:"企業の",hint:"corporation(企業)の"},
+{id:189,en:"recommend",jp:"薦める",hint:"re(強意) + commend(任せる) ⇒ 推薦する"},
+{id:190,en:"indicate",jp:"示す",hint:"in(中へ) + dic(言う) ⇒ 指し示す"},
+{id:191,en:"publish",jp:"出版する",hint:"パブリック(公)にする"},
+{id:192,en:"statement",jp:"声明",hint:"state(述べる) + ment(もの)"},
+{id:193,en:"welcome",jp:"歓迎する",hint:"will(望む) + come(来る) ⇒ 歓迎"},
+{id:194,en:"sincerely",jp:"心から",hint:"sincere(誠実な) + ly ⇒ 手紙の結び"},
+{id:195,en:"distribute",jp:"配布する",hint:"dis(別々に) + tribute(与える)"},
+{id:196,en:"accept",jp:"受け入れる",hint:"ac(〜へ) + cept(つかむ) ⇒ 受諾する"},
+{id:197,en:"financial",jp:"財政の",hint:"fin(終わり) ⇒ 決済 ⇒ 金融"},
+{id:198,en:"promotion",jp:"販売促進",hint:"pro(前へ) + move(動かす) ⇒ 昇進・促進"},
+{id:199,en:"organize",jp:"準備する",hint:"organ(器官・組織)のように体系化する"},
+{id:200,en:"renovate",jp:"改修する",hint:"re(再び) + nov(新しい)"},
+{id:201,en:"feature",jp:"展示する",hint:"fact(作る) ⇒ 目立つ作り・特徴 ⇒ 特集する"},
+{id:202,en:"replace",jp:"後任となる",hint:"re(再び) + place(置く) ⇒ 入れ替わる"},
+{id:203,en:"investment",jp:"投資",hint:"in(中に) + vest(服を着せる＝授ける)"},
+{id:204,en:"responsibility",jp:"責任",hint:"レスポンス(反応)できる能力 ＝ 責任"},
+{id:205,en:"submit",jp:"提出する",hint:"sub(下から) + mit(送る)"},
+{id:206,en:"require",jp:"求める",hint:"リクエスト(request)と同語源。必要とする"},
+{id:207,en:"purchase",jp:"購入する",hint:"pur(前に) + chase(追いかける) ⇒ 買い求める"},
+{id:208,en:"specialize",jp:"専門とする",hint:"special(特別)なものにする"},
+{id:209,en:"knowledge",jp:"知識",hint:"know(知る) + ledge(こと)"},
+{id:210,en:"topic",jp:"話題",hint:"topos(場所) ⇒ 議論の場・話題"},
+{id:211,en:"agree",jp:"同意する",hint:"a(〜へ) + gree(喜ぶ) ⇒ 意見が合う"},
+{id:212,en:"detail",jp:"細部",hint:"de(完全に) + tail(切る) ⇒ 細かく切り分けたもの"},
+{id:213,en:"degree",jp:"温度",hint:"de(下へ) + gree(歩む) ⇒ 段階・度"},
+{id:214,en:"personal",jp:"個人的な",hint:"person(人)の"},
+{id:215,en:"side by side",jp:"並んで",hint:"横(side)と横(side)がそば(by)にある"},
+{id:216,en:"attract",jp:"集める",hint:"at(〜へ) + tract(引く) ⇒ 魅了する"},
+{id:217,en:"audience",jp:"観客",hint:"audio(聴く) + ence(人) ⇒ 聴衆"},
+{id:218,en:"far",jp:"はるかに",hint:"遠い ⇒ 程度がはるかに"},
+{id:219,en:"on display",jp:"陳列してある",hint:"ディスプレイ(展示)の上(on)に"},
+{id:220,en:"past",jp:"最近の",hint:"ここ数年(past years)の"},
+{id:221,en:"series",jp:"シリーズ",hint:"ser(つなぐ) ⇒ 連続"},
+{id:222,en:"vehicle",jp:"車",hint:"veh(運ぶ) + icle(もの) ⇒ 乗り物"},
+{id:223,en:"deal with",jp:"対処する",hint:"deal(配る・扱う) + with"},
+{id:224,en:"depart",jp:"出発する",hint:"de(離れて) + part(分かれる)"},
+{id:225,en:"plenty of",jp:"たくさんの〜",hint:"plenty(多量)"},
+{id:226,en:"stack",jp:"積み重ねる",hint:"stick(突き刺す) ⇒ 藁の山 ⇒ 積み重ね"},
+{id:227,en:"vacant",jp:"空いている",hint:"vac(空っぽ)の ⇒ バカンス(休暇)"},
+{id:228,en:"absent",jp:"欠勤して",hint:"ab(離れて) + sent(存在する) ⇒ 不在"},
+{id:229,en:"foreign",jp:"外国の",hint:"for(ドア) + eign(外) ⇒ 異国の"},
+{id:230,en:"sightseeing",jp:"観光",hint:"sight(景色) + see(見る)"},
+{id:231,en:"uniform",jp:"制服",hint:"uni(一つの) + form(形)"},
+{id:232,en:"import",jp:"輸入する",hint:"im(中へ) + port(運ぶ) ⇒ 輸入"},
+{id:233,en:"official",jp:"正式な",hint:"office(職務)の ⇒ 公式の"},
+{id:234,en:"remember",jp:"覚えている",hint:"re(再び) + member(心) ⇒ 思い出す"},
+{id:235,en:"colleague",jp:"同僚",hint:"co(共に) + league(選ばれた人) ⇒ 仲間"},
+{id:236,en:"in fact",jp:"実際には",hint:"fact(事実)の中では"},
+{id:237,en:"paragraph",jp:"段落",hint:"para(脇に) + graph(書く) ⇒ 小見出し・段落"},
+{id:238,en:"plant",jp:"工場",hint:"plant(植える)された設備 ⇒ 工場"},
+{id:239,en:"rent",jp:"借りる",hint:"render(与える) ⇒ 貸借料"},
+{id:240,en:"sample",jp:"実例",hint:"example(例)と同語源"},
+{id:241,en:"unable",jp:"出来ない",hint:"un(否定) + able(できる)"},
+{id:242,en:"try on",jp:"試着する",hint:"身の上に(on)試す(try)"},
+{id:243,en:"brochure",jp:"パンフレット",hint:"broach(突き刺す) ⇒ 綴じた本"},
+{id:244,en:"excited",jp:"興奮している",hint:"ex(外へ) + cite(呼ぶ) ⇒ 感情を呼び起こす"},
+{id:245,en:"final",jp:"最終の",hint:"fin(終わり)の"},
+{id:246,en:"popular",jp:"人気のある",hint:"pop(大衆)の"},
+{id:247,en:"basic",jp:"基本的な",hint:"base(土台)の"},
+{id:248,en:"compare",jp:"比べる",hint:"com(共に) + pare(等しい) ⇒ 並べて比べる"},
+{id:249,en:"press",jp:"押す",hint:"圧力をかける"},
+{id:250,en:"regular",jp:"定期的な",hint:"reg(定規)で測ったような ⇒ 規則正しい"},
+];
+// --- END PART 1 ---
+// --- DATA PART 2 (251-600) ---
+const dataPart2 = [
+{id:251,en:"seem",jp:"〜のように見える",hint:"seem to be"},
+{id:252,en:"along with",jp:"一緒に",hint:"〜に沿って(along)共に(with)"},
+{id:253,en:"communication",jp:"コミュニケーション",hint:"common(共通)のものにする ⇒ 意思疎通"},
+{id:254,en:"example",jp:"例",hint:"for example"},
+{id:255,en:"instead",jp:"代わりに",hint:"in stead(場所) of ⇒ その場所の代わりに"},
+{id:256,en:"luggage",jp:"手荷物",hint:"log(丸太)を引きずる ⇒ 荷物"},
+{id:257,en:"no longer",jp:"もう〜でない",hint:"長く(long)続かない(no)"},
+{id:258,en:"steel",jp:"鉄鋼",hint:"スチール缶のスチール"},
+{id:259,en:"climb",jp:"登る",hint:"クライミング"},
+{id:260,en:"reschedule",jp:"予定を変更する",hint:"re(再び) + schedule"},
+{id:261,en:"afraid",jp:"残念ながら",hint:"I'm afraid that... (残念ながら〜だ)"},
+{id:262,en:"carry",jp:"置いている",hint:"店に商品を運んで(carry)ある ⇒ 扱っている"},
+{id:263,en:"continue",jp:"続く",hint:"con(共に) + ten(保つ) ⇒ 継続する"},
+{id:264,en:"feedback",jp:"フィードバック",hint:"feed(エサ) + back(戻す) ⇒ 反応を返す"},
+{id:265,en:"former",jp:"前の",hint:"フォーメーション(形成)の前の段階"},
+{id:266,en:"range",jp:"幅",hint:"rank(列)と同語源。範囲"},
+{id:267,en:"borrow",jp:"借りる",hint:"Borrow(借りる) ⇔ Lend(貸す)"},
+{id:268,en:"branch",jp:"支店",hint:"幹から分かれた枝 ⇒ 支店"},
+{id:269,en:"couple of",jp:"2〜3の",hint:"カップル(2人)くらいの"},
+{id:270,en:"delicious",jp:"とてもおいしい",hint:"de(強意) + lic(誘惑する) ⇒ 魅力的な味"},
+{id:271,en:"repeat",jp:"繰り返す",hint:"re(再び) + pet(求める)"},
+{id:272,en:"shift",jp:"シフト",hint:"交替・移動する"},
+{id:273,en:"banquet",jp:"晩餐会",hint:"bench(ベンチ)と同語源。長い席での食事"},
+{id:274,en:"cycle",jp:"自転車に乗る",hint:"circle(円)と同語源。車輪"},
+{id:275,en:"excuse",jp:"許す",hint:"言い訳(excuse)を聞いて許す"},
+{id:276,en:"export",jp:"輸出する",hint:"ex(外へ) + port(運ぶ)"},
+{id:277,en:"glad",jp:"うれしい",hint:"I'm glad to ~"},
+{id:278,en:"would you mind",jp:"〜していただけますか",hint:"mind(気にする)しますか？ ⇒ してくれませんか"},
+{id:279,en:"shake",jp:"振る",hint:"シェイクする"},
+{id:280,en:"gain",jp:"増やす",hint:"ゲイン(獲得)"},
+{id:281,en:"warn",jp:"警告する",hint:"guard(守る)と同語源。警告して守らせる"},
+{id:282,en:"full-time",jp:"常勤の",hint:"フルタイム"},
+{id:283,en:"instrument",jp:"楽器",hint:"in(中へ) + struct(積む) ⇒ 道具・楽器"},
+{id:284,en:"adjust",jp:"調整する",hint:"ad(〜へ) + just(正しい) ⇒ 正しく合わせる"},
+{id:285,en:"author",jp:"著者",hint:"authority(権威) ⇒ 創造した人"},
+{id:286,en:"modern",jp:"現代の",hint:"mode(流行)の ⇒ 現代的な"},
+{id:287,en:"notice",jp:"気が付く",hint:"ノート(印)をつける ⇒ 気づく"},
+{id:288,en:"out of order",jp:"故障している",hint:"order(順序・秩序)から外れて(out) ⇒ 正常でない"},
+{id:289,en:"serious",jp:"本気の",hint:"シリアス(真剣な)"},
+{id:290,en:"share",jp:"一緒に使う",hint:"shear(刈り取る) ⇒ 分け前 ⇒ 共有する"},
+{id:291,en:"guess",jp:"思う",hint:"get(手に入れる)と同語源。答えを掴もうとする"},
+{id:292,en:"plus",jp:"加えて",hint:"より多く(more)"},
+{id:293,en:"version",jp:"版",hint:"vert(回る) ⇒ 変化形・版"},
+{id:294,en:"clerk",jp:"係員",hint:"cleric(聖職者) ⇒ 書記・店員"},
+{id:295,en:"distance",jp:"距離",hint:"dis(離れて) + stand(立つ) ⇒ 隔たり"},
+{id:296,en:"hang",jp:"掛かる",hint:"ハンガー(hangするもの)"},
+{id:297,en:"pass out",jp:"配る",hint:"外へ(out)手渡す(pass)"},
+{id:298,en:"earn",jp:"収益を上げる",hint:"お金を稼ぐ"},
+{id:299,en:"overtime",jp:"残業",hint:"規定時間をオーバーした"},
+{id:300,en:"amount",jp:"量",hint:"amount(総計) ⇒ 量"},
+{id:301,en:"chair",jp:"司会を務める",hint:"椅子(chair) ⇒ 議長席に座る"},
+{id:302,en:"describe",jp:"述べる",hint:"de(下に) + scribe(書く) ⇒ 描写する"},
+{id:303,en:"previous",jp:"以前の",hint:"pre(前の) + via(道) ⇒ 通ってきた道"},
+{id:304,en:"security",jp:"警備",hint:"se(離れて) + cure(心配) ⇒ 心配がない状態"},
+{id:305,en:"collect",jp:"集める",hint:"col(共に) + lect(集める)"},
+{id:306,en:"enclose",jp:"同封する",hint:"en(中に) + close(閉じる)"},
+{id:307,en:"retire",jp:"退職する",hint:"re(後ろへ) + tir(引く) ⇒ 引退する"},
+{id:308,en:"serve",jp:"出す",hint:"serv(仕える) ⇒ 食事を出す"},
+{id:309,en:"agenda",jp:"議題",hint:"ag(行う)こと ⇒ 実施すべき計画"},
+{id:310,en:"at all times",jp:"常時",hint:"全ての時間(times)において"},
+{id:311,en:"actual",jp:"実際の",hint:"act(行う) ⇒ 実際に行われた"},
+{id:312,en:"announcement",jp:"お知らせ",hint:"ad(〜へ) + nounce(伝える) ⇒ 発表"},
+{id:313,en:"approve",jp:"承認する",hint:"ap(〜へ) + prove(証明) ⇒ 認める"},
+{id:314,en:"based",jp:"基づく",hint:"ベース(土台)にした"},
+{id:315,en:"effective",jp:"効果的な",hint:"effect(効果)のある"},
+{id:316,en:"engineer",jp:"技術者",hint:"engine(才知・機械)を扱う人"},
+{id:317,en:"explain",jp:"説明する",hint:"ex(外へ) + plain(平らな) ⇒ 平易にする"},
+{id:318,en:"frequently",jp:"頻繁に",hint:"frequent(たびたびの) + ly"},
+{id:319,en:"government",jp:"政府",hint:"govern(舵を取る・統治する)組織"},
+{id:320,en:"instruction",jp:"使用説明書",hint:"インストラクター(指導者)の指示書"},
+{id:321,en:"reserve",jp:"予約する",hint:"re(後に) + serv(保つ) ⇒ 取っておく"},
+{id:322,en:"science",jp:"科学",hint:"sci(知る)こと ⇒ 科学"},
+{id:323,en:"shortly",jp:"まもなく",hint:"short(短い)時間で"},
+{id:324,en:"decrease",jp:"下がる",hint:"de(下へ) + crease(成長) ⇒ 減少"},
+{id:325,en:"outlet",jp:"店舗",hint:"out(外へ) + let(させる) ⇒ 放出口・直販店"},
+{id:326,en:"sponsor",jp:"後援する",hint:"spond(約束)する人 ⇒ 保証人・後援者"},
+{id:327,en:"waste",jp:"無駄",hint:"vast(空っぽの)と同語源。無駄にする"},
+{id:328,en:"afford",jp:"〜する余裕がある",hint:"Ford(フォード)車を買う余裕がある"},
+{id:329,en:"capital",jp:"資本金",hint:"cap(頭) ⇒ 主要な・首都・元手"},
+{id:330,en:"view",jp:"意見",hint:"見る ⇒ 考え方"},
+{id:331,en:"benefit",jp:"恩恵",hint:"bene(良い) + fit(行う) ⇒ 利益"},
+{id:332,en:"conduct",jp:"行う",hint:"コンダクター(指揮者) ⇒ 指揮・実施する"},
+{id:333,en:"correct",jp:"訂正する",hint:"correct(正しい)状態にする"},
+{id:334,en:"locate",jp:"位置する",hint:"locus(場所)に置く"},
+{id:335,en:"pick up",jp:"車で迎えに行く",hint:"拾い上げる(pick up) ⇒ 乗せる"},
+{id:336,en:"technology",jp:"技術",hint:"techn(技術) + logy(学問)"},
+{id:337,en:"access",jp:"アクセスする",hint:"ac(〜へ) + cess(進む) ⇒ 接近"},
+{id:338,en:"consumer",jp:"消費者",hint:"consume(消費する)人"},
+{id:339,en:"deadline",jp:"締め切り",hint:"越えたら撃たれる死の線 ⇒ 締切"},
+{id:340,en:"delay",jp:"遅らせる",hint:"de(離れて) + lay(置く) ⇒ 後回しにする"},
+{id:341,en:"encourage",jp:"勧める",hint:"en(〜にする) + courage(勇気) ⇒ 励ます"},
+{id:342,en:"release",jp:"公表する",hint:"re(戻す) + lease(緩める) ⇒ 解放する"},
+{id:343,en:"result in",jp:"〜になる",hint:"〜という結果(result)の中(in)に入る"},
+{id:344,en:"subject to",jp:"〜する可能性がある",hint:"subject(主題・臣民) ⇒ 支配下にある"},
+{id:345,en:"condition",jp:"状態",hint:"con(共に) + dic(言う) ⇒ 決まり事・状態"},
+{id:346,en:"electronics",jp:"電子機器",hint:"electron(電子)の技術"},
+{id:347,en:"expand",jp:"広げる",hint:"ex(外へ) + pand(広げる) ⇒ 拡張"},
+{id:348,en:"individual",jp:"個人",hint:"in(否定) + divide(分ける) ⇒ 分けられない個"},
+{id:349,en:"method",jp:"方法",hint:"meta(〜に沿って) + hod(道) ⇒ 方法"},
+{id:350,en:"missing",jp:"見つからない",hint:"miss(逃す) + ing ⇒ 行方不明の"},
+{id:351,en:"originally",jp:"初めは",hint:"origin(起源) + ally"},
+{id:352,en:"quickly",jp:"素早く",hint:"quick(速い) + ly"},
+{id:353,en:"reach",jp:"連絡する",hint:"手を伸ばして届く(reach) ⇒ 連絡がつく"},
+{id:354,en:"region",jp:"地域",hint:"reg(統治する)範囲 ⇒ 地域"},
+{id:355,en:"renew",jp:"更新する",hint:"re(再び) + new(新しく)"},
+{id:356,en:"traffic",jp:"交通量",hint:"trans(超えて) + fic(往来) ⇒ 交通"},
+{id:357,en:"beyond",jp:"〜を超えて",hint:"yonder(あそこ)と同語源。はるか向こう"},
+{id:358,en:"award",jp:"賞",hint:"ad(〜へ) + ward(見張る) ⇒ 審査して授与する"},
+{id:359,en:"convention",jp:"会議",hint:"con(共に) + vent(来る) ⇒ 大会"},
+{id:360,en:"fund",jp:"資金",hint:"foundation(土台) ⇒ 資金"},
+{id:361,en:"recipe",jp:"レシピ",hint:"receive(受け取る)の命令形 ⇒ 調理法"},
+{id:362,en:"sign up for",jp:"申し込む",hint:"署名(sign)して登録する(up)"},
+{id:363,en:"track",jp:"追跡する",hint:"足跡(track)を追う ⇒ トラッキング"},
+{id:364,en:"would rather",jp:"〜するほうがよい",hint:"rather(むしろ)〜したい"},
+{id:365,en:"as soon as possible",jp:"出来るだけ早く",hint:"ASAP"},
+{id:366,en:"allow",jp:"認める",hint:"alloc(割り当てる)と同語源。許可する"},
+{id:367,en:"appear",jp:"出る",hint:"現れる"},
+{id:368,en:"average",jp:"平均的な",hint:"海損(avaria)の分担 ⇒ 平均"},
+{id:369,en:"avoid",jp:"避ける",hint:"a(離れて) + void(空っぽ) ⇒ 退避する"},
+{id:370,en:"convenient",jp:"都合のよい",hint:"con(共に) + ven(来る) ⇒ 都合よく合う"},
+{id:371,en:"entertainment",jp:"娯楽",hint:"enter(間に) + tain(保つ) ⇒ もてなす"},
+{id:372,en:"figure",jp:"数字",hint:"形作る ⇒ 図形・数字"},
+{id:373,en:"grand",jp:"はなやかな",hint:"great(大きい)と同語源"},
+{id:374,en:"in case of",jp:"〜の際は",hint:"case(場合)には"},
+{id:375,en:"level",jp:"水準",hint:"libra(天秤) ⇒ 水平・水準"},
+{id:376,en:"moment",jp:"短時間",hint:"move(動く) ⇒ 瞬きする間の時間"},
+{id:377,en:"option",jp:"選択肢",hint:"opt(選ぶ)こと"},
+{id:378,en:"period",jp:"期間",hint:"peri(周り) + od(道) ⇒ 巡回・期間"},
+{id:379,en:"personnel",jp:"従業員",hint:"person(人)の集合体"},
+{id:380,en:"procedure",jp:"手続き",hint:"pro(前へ) + ced(進む) ⇒ 手順"},
+{id:381,en:"reasonable",jp:"手ごろな",hint:"reason(理屈)に合った ⇒ 納得できる価格"},
+{id:382,en:"rely",jp:"頼る",hint:"reliable(頼れる)の動詞"},
+{id:383,en:"respect",jp:"尊敬",hint:"re(再び) + spect(見る) ⇒ 二度見するほど立派"},
+{id:384,en:"search",jp:"さがす",hint:"circle(円)を描いて探す"},
+{id:385,en:"sharp",jp:"ちょうどに",hint:"鋭い(sharp) ⇒ 時間きっかり"},
+{id:386,en:"suitable",jp:"適した",hint:"suit(スーツ)のように体に合う"},
+{id:387,en:"upcoming",jp:"来たる",hint:"up(上に) + come(来る) ⇒ 近づいている"},
+{id:388,en:"commercial",jp:"商業的な",hint:"commerce(商業)の"},
+{id:389,en:"extra",jp:"追加の",hint:"extra(外の) ⇒ 臨時の・追加の"},
+{id:390,en:"human resources",jp:"人事",hint:"human(人) + resources(資源) ⇒ HR"},
+{id:391,en:"reception",jp:"歓迎会",hint:"re(受け) + cept(取る) ⇒ 歓迎・受付"},
+{id:392,en:"stress",jp:"強調する",hint:"strict(きつく締める) ⇒ 強調する"},
+{id:393,en:"transportation",jp:"交通機関",hint:"trans(超えて) + port(運ぶ)"},
+{id:394,en:"trend",jp:"傾向",hint:"turn(回る)と同語源。向き・傾向"},
+{id:395,en:"value",jp:"価格",hint:"val(価値)がある"},
+{id:396,en:"profit",jp:"利益",hint:"pro(前へ) + fit(行う) ⇒ 進歩・利益"},
+{id:397,en:"headquarters",jp:"本社",hint:"Head(頭) + Quarter(宿舎) ⇒ 本部"},
+{id:398,en:"refund",jp:"払い戻し",hint:"re(戻る) + fund(資金)"},
+{id:399,en:"senior",jp:"上位の",hint:"sen(古い) + or(より) ⇒ 年上の"},
+{id:400,en:"by mistake",jp:"誤って",hint:"mistake(ミス)によって"},
+{id:401,en:"cause",jp:"引き起こす",hint:"Because(なぜなら)のcause"},
+{id:402,en:"decade",jp:"10年",hint:"デカ(10)"},
+{id:403,en:"expire",jp:"期限が切れる",hint:"ex(外へ) + pire(息) ⇒ 息絶える"},
+{id:404,en:"income",jp:"収入",hint:"in(中へ) + come(来る)"},
+{id:405,en:"immediate",jp:"早急な",hint:"im(否定) + medi(間) ⇒ 間をおかない"},
+{id:406,en:"questionnaire",jp:"アンケート",hint:"question(質問)の書類"},
+{id:407,en:"routine",jp:"習慣的に繰り返されること",hint:"route(道) ⇒ 決まった道筋"},
+{id:408,en:"transfer",jp:"転勤する",hint:"trans(超えて) + fer(運ぶ) ⇒ 移動"},
+{id:409,en:"complicated",jp:"複雑な",hint:"com(共に) + plic(折る) ⇒ 複雑な"},
+{id:410,en:"education",jp:"教育",hint:"e(外へ) + duce(導く) ⇒ 才能を引き出す"},
+{id:411,en:"greet",jp:"出迎える",hint:"greeting(挨拶)する"},
+{id:412,en:"influence",jp:"影響力",hint:"in(中へ) + flu(流れる) ⇒ インフルエンサー"},
+{id:413,en:"lack",jp:"不足",hint:"leak(漏れる)と同語源。欠乏"},
+{id:414,en:"mild",jp:"温暖な",hint:"melt(溶ける)と同語源。柔らかい"},
+{id:415,en:"normally",jp:"普通は",hint:"norm(基準)通りに"},
+{id:416,en:"physical",jp:"身体の",hint:"physics(自然・物理)の ⇒ 身体の"},
+{id:417,en:"polite",jp:"礼儀正しい",hint:"polished(磨かれた) ⇒ 洗練された"},
+{id:418,en:"population",jp:"人口",hint:"popul(人々)の数"},
+{id:419,en:"pour",jp:"注ぐ",hint:"ポットから注ぐ"},
+{id:420,en:"instant",jp:"すぐの",hint:"in(中に) + stant(立つ) ⇒ 差し迫った"},
+{id:421,en:"venue",jp:"会場",hint:"ven(来る)場所"},
+{id:422,en:"resign",jp:"辞任する",hint:"re(後ろへ) + sign(署名) ⇒ 署名して退く"},
+{id:423,en:"attach",jp:"添付する",hint:"at(〜へ) + tach(杭で留める)"},
+{id:424,en:"cancel",jp:"取り消す",hint:"格子(cancer)状に線を引いて消す"},
+{id:425,en:"common",jp:"よくある",hint:"com(共に) + muni(奉仕) ⇒ 共通の"},
+{id:426,en:"conversation",jp:"会話",hint:"con(共に) + vers(回す) ⇒ 交わる"},
+{id:427,en:"economical",jp:"経済的な",hint:"eco(家) + nomy(管理) ⇒ 節約"},
+{id:428,en:"exchange",jp:"交換する",hint:"ex(外へ) + change(変える) ⇒ 交換"},
+{id:429,en:"expert",jp:"専門的",hint:"ex(外で) + per(試す) ⇒ 経験豊富な人"},
+{id:430,en:"extention",jp:"内線",hint:"ex(外へ) + tend(伸ばす) ⇒ 電話線を伸ばしたもの"},
+{id:431,en:"familiar",jp:"よく知っている",hint:"family(家族)のように親しい"},
+{id:432,en:"host",jp:"主催する",hint:"guest(客)をもてなす主人"},
+{id:433,en:"ride",jp:"車に乗せること",hint:"馬に乗る(ride) ⇒ 車に乗る"},
+{id:434,en:"seek",jp:"求める",hint:"searchと同語源。探し求める"},
+{id:435,en:"step down",jp:"辞任する",hint:"段(step)を降りる(down) ⇒ 役職を降りる"},
+{id:436,en:"technique",jp:"手法",hint:"techn(技術) + ique(術)"},
+{id:437,en:"temporary",jp:"臨時の",hint:"tempo(時間) ⇒ 一時の"},
+{id:438,en:"factor",jp:"要因",hint:"fact(作る)もの ⇒ 結果を作る要因"},
+{id:439,en:"assemble",jp:"組み立てる",hint:"as(〜へ) + sem(同じ) ⇒ 同じ場所に集める"},
+{id:440,en:"attention",jp:"注意",hint:"at(〜へ) + ten(伸ばす) ⇒ 気を向ける"},
+{id:441,en:"invoice",jp:"請求書",hint:"in(中へ) + voice(声) ⇒ 送り状"},
+{id:442,en:"prior to",jp:"〜の前に",hint:"prior(優先の) ⇒ 前に"},
+{id:443,en:"refreshment",jp:"軽い飲食物",hint:"リフレッシュするもの"},
+{id:444,en:"trust",jp:"信用",hint:"true(真実)と同語源。信頼"},
+{id:445,en:"plumber",jp:"配管工",hint:"plumb(鉛)を扱う人 ⇒ 水道屋"},
+{id:446,en:"update",jp:"更新する",hint:"up(最新) + date(日付)にする"},
+{id:447,en:"upstairs",jp:"上の階に",hint:"up(上へ) + stairs(階段)"},
+{id:448,en:"manner",jp:"態度",hint:"man(手)での扱い方 ⇒ 態度・作法"},
+{id:449,en:"consider",jp:"考える",hint:"con(よく) + sider(星を見る) ⇒ 熟考する"},
+{id:450,en:"executive",jp:"重役",hint:"execute(実行する)権限を持つ人"},
+{id:451,en:"means",jp:"手段",hint:"meaning(意味)とは別語"},
+{id:452,en:"regarding",jp:"〜に関する",hint:"regard(見る) + ing ⇒ 〜を見て"},
+{id:453,en:"association",jp:"提携",hint:"associate(結びつく)こと"},
+{id:454,en:"budget",jp:"予算",hint:"bouge(革袋) ⇒ 予算を入れる袋"},
+{id:455,en:"contain",jp:"含む",hint:"con(共に) + tain(保つ) ⇒ 中に入れている"},
+{id:456,en:"remain",jp:"〜のままでいる",hint:"re(後ろに) + main(留まる)"},
+{id:457,en:"chemical",jp:"化学薬品",hint:"alchemy(錬金術) ⇒ 化学"},
+{id:458,en:"demonstrate",jp:"実地説明をする",hint:"de(完全に) + monstr(示す)"},
+{id:459,en:"qualified",jp:"適任である",hint:"quality(質・資格)を与えられた"},
+{id:460,en:"revise",jp:"修正する",hint:"re(再び) + vise(見る) ⇒ 見直して直す"},
+{id:461,en:"relaxed",jp:"くつろいだ",hint:"re(離れて) + lax(緩い)"},
+{id:462,en:"upgrade",jp:"改良する",hint:"grade(等級)をup(上げる)"},
+{id:463,en:"accompany",jp:"同行する",hint:"ac(〜へ) + company(仲間) ⇒ 仲間になる"},
+{id:464,en:"attitude",jp:"態度",hint:"apt(適した) ⇒ 適した姿勢 ⇒ 態度"},
+{id:465,en:"commute",jp:"通う",hint:"com(往復) + mute(変える) ⇒ 通勤通学"},
+{id:466,en:"competitive",jp:"競争力のある",hint:"compete(競争する)力がある"},
+{id:467,en:"refuse",jp:"拒否する",hint:"re(後ろへ) + fuse(注ぐ) ⇒ 拒絶する"},
+{id:468,en:"subscribe",jp:"定期購読する",hint:"sub(下に) + scribe(書く) ⇒ 署名して申し込む"},
+{id:469,en:"process",jp:"処理する",hint:"pro(前へ) + cess(進む) ⇒ 手順・過程"},
+{id:470,en:"comment",jp:"意見",hint:"com(強意) + men(心) ⇒ 心に浮かんだこと"},
+{id:471,en:"necessary",jp:"必要な",hint:"ne(否定) + cess(譲る) ⇒ 譲れない ⇒ 必要な"},
+{id:472,en:"respectively",jp:"それぞれ",hint:"respect(点) ⇒ それぞれの点で"},
+{id:473,en:"probable",jp:"起こりそうな",hint:"probably(たぶん)の形容詞"},
+{id:474,en:"efficient",jp:"効率のよい",hint:"ef(外へ) + fic(作る) ⇒ 効果が出る"},
+{id:475,en:"identify",jp:"明らかにする",hint:"アイデンティティ(正体)を確認する"},
+{id:476,en:"particular",jp:"特定の",hint:"part(部分)の ⇒ 特別の"},
+{id:477,en:"relocate",jp:"移転する",hint:"re(再び) + locate(配置) ⇒ 引っ越す"},
+{id:478,en:"remind",jp:"思い出させる",hint:"re(再び) + mind(心) ⇒ 思い出させる"},
+{id:479,en:"compared with",jp:"〜と比べて",hint:"compare(比べる)と"},
+{id:480,en:"establish",jp:"設立する",hint:"stable(安定した)状態にする ⇒ 確立・設立"},
+{id:481,en:"point out",jp:"指摘する",hint:"外へ(out)指差す(point)"},
+{id:482,en:"property",jp:"不動産",hint:"proper(固有の)もの ⇒ 財産・所有地"},
+{id:483,en:"restore",jp:"修復する",hint:"re(再び) + store(蓄える) ⇒ 元に戻す"},
+{id:484,en:"status",jp:"状況",hint:"stand(立つ) ⇒ 立場・地位"},
+{id:485,en:"expense",jp:"経費",hint:"ex(外へ) + pense(払う)"},
+{id:486,en:"focus",jp:"焦点を合わせる",hint:"炉(focus) ⇒ 中心の火 ⇒ 焦点"},
+{id:487,en:"laboratory",jp:"研究所",hint:"labor(労働)する場所"},
+{id:488,en:"obtain",jp:"得る",hint:"ob(〜へ) + tain(つかむ) ⇒ 獲得する"},
+{id:489,en:"reputation",jp:"評判",hint:"re(再び) + put(考える) ⇒ みんなが考えていること"},
+{id:490,en:"retail",jp:"小売り",hint:"re(再び) + tail(切る) ⇒ 小分けして売る"},
+{id:491,en:"contribute",jp:"寄付する",hint:"con(共に) + tribute(与える)"},
+{id:492,en:"convince",jp:"納得させる",hint:"con(完全に) + vince(征服する) ⇒ 議論で勝つ"},
+{id:493,en:"divide",jp:"分ける",hint:"di(離れて) + vide(分ける)"},
+{id:494,en:"fine",jp:"罰金",hint:"finish(終わり) ⇒ 金で終わらせる"},
+{id:495,en:"inquire",jp:"尋ねる",hint:"in(中に) + quire(求める) ⇒ 問い合わせる"},
+{id:496,en:"specific",jp:"特定の",hint:"スペック(仕様) ⇒ 具体的な・特定の"},
+{id:497,en:"stock",jp:"在庫",hint:"幹(stock) ⇒ 蓄え・在庫"},
+{id:498,en:"aware",jp:"気が付いている",hint:"wary(用心深い) ⇒ 気づいている"},
+{id:499,en:"broad",jp:"大まかな",hint:"ブロード(広い) ⇒ 幅広い・概略の"},
+{id:500,en:"maximum",jp:"最大の",hint:"max(最大)の"},
+];
+// --- END PART 2 ---
+// --- DATA PART 3 (501-990) ---
+const dataPart3 = [
+{id:501,en:"aim",jp:"向ける",hint:"arm(武器)を向ける ⇒ 狙う"},
+{id:502,en:"cooperate",jp:"協力する",hint:"co(共に) + operate(働く)"},
+{id:503,en:"quantity",jp:"量",hint:"クオリティ(質) と クオンティティ(量)"},
+{id:504,en:"by accident",jp:"偶然に",hint:"accident(事故・偶発事)によって"},
+{id:505,en:"launch",jp:"始める",hint:"lance(槍)を投げる ⇒ 発射・開始する"},
+{id:506,en:"obvious",jp:"明らかな",hint:"ob(手前に) + via(道) ⇒ 道にある障害物"},
+{id:507,en:"optimistic",jp:"楽観的な",hint:"optimum(最善)を考える人"},
+{id:508,en:"owe",jp:"〜のおかげである",hint:"負っている ⇒ おかげだ"},
+{id:509,en:"vision",jp:"考え",hint:"vis(見る)こと ⇒ 展望"},
+{id:510,en:"withdraw",jp:"引き出す",hint:"with(後ろへ) + draw(引く) ⇒ 預金を引き出す"},
+{id:511,en:"deliberately",jp:"わざと",hint:"libra(天秤)で量るように ⇒ 慎重に・意図的に"},
+{id:512,en:"dismiss",jp:"解雇する",hint:"dis(離れて) + miss(送る) ⇒ 去らせる"},
+{id:513,en:"glance",jp:"さっと見る",hint:"チラッと見る"},
+{id:514,en:"ingredient",jp:"材料",hint:"in(中に) + gred(進む) ⇒ 中に入っているもの"},
+{id:515,en:"capable",jp:"能力がある",hint:"cap(つかむ) + able(できる) ⇒ 能力がある"},
+{id:516,en:"conclution",jp:"結論",hint:"conclude(結論づける)の名詞"},
+{id:517,en:"emergency",jp:"緊急事態",hint:"emerge(現れる)こと ⇒ 突発事態"},
+{id:518,en:"load",jp:"積み込む",hint:"lead(導く)と同語源。旅の積荷"},
+{id:519,en:"punctual",jp:"時間を守る",hint:"point(点) ⇒ 時間の点を守る"},
+{id:520,en:"possibility",jp:"可能性",hint:"possible(可能な)の名詞"},
+{id:521,en:"journal",jp:"雑誌",hint:"journ(一日)の記録 ⇒ 日誌・雑誌"},
+{id:522,en:"policy",jp:"規則",hint:"polis(都市)の管理 ⇒ 政策・方針"},
+{id:523,en:"appliance",jp:"電化器具",hint:"apply(応用)された道具 ⇒ 家電"},
+{id:524,en:"approach",jp:"話を持ちかける",hint:"アプローチする"},
+{id:525,en:"standard",jp:"基準",hint:"stand(立つ) + hard(固い) ⇒ 固定された基準"},
+{id:526,en:"valid",jp:"有効な",hint:"val(価値)がある"},
+{id:527,en:"eager",jp:"強く望んでいる",hint:"ac(鋭い)と同語源。熱心な"},
+{id:528,en:"opinion",jp:"意見",hint:"opt(選ぶ) ⇒ 自分が選んだ考え"},
+{id:529,en:"belongings",jp:"持ち物",hint:"belong(属する)もの"},
+{id:530,en:"assignment",jp:"与えられた仕事",hint:"assign(割り当てる)されたもの"},
+{id:531,en:"innovative",jp:"革新的な",hint:"in(中へ) + nov(新しい) ⇒ 革新"},
+{id:532,en:"supervise",jp:"監督する",hint:"super(上から) + vise(見る)"},
+{id:533,en:"credit",jp:"認める",hint:"cred(信じる) ⇒ 信用・功績"},
+{id:534,en:"various",jp:"さまざまな",hint:"variety(バラエティ)のある"},
+{id:535,en:"analysis",jp:"分析",hint:"ana(解く) + lysis(離す) ⇒ 分解・分析"},
+{id:536,en:"reject",jp:"却下する",hint:"re(後ろへ) + ject(投げる) ⇒ 拒絶する"},
+{id:537,en:"on behalf of",jp:"〜を代表して",hint:"behalf(利益) ⇒ 〜の利益のために"},
+{id:538,en:"overlook",jp:"見逃す",hint:"over(上を越えて) + look(見る) ⇒ 見落とす"},
+{id:539,en:"seal",jp:"封をする",hint:"sign(印)と同語源。封印"},
+{id:540,en:"typical",jp:"典型的な",hint:"type(タイプ)通りの"},
+{id:541,en:"code",jp:"規則",hint:"codex(木の幹→本) ⇒ 法典・規則"},
+{id:542,en:"connect",jp:"接続する",hint:"con(共に) + nect(結ぶ)"},
+{id:543,en:"general",jp:"大まかな",hint:"genus(種族)全体の ⇒ 一般的"},
+{id:544,en:"nicely",jp:"うまく",hint:"nice(素敵な) + ly"},
+{id:545,en:"orientation",jp:"オリエンテーション",hint:"orient(東＝太陽が昇る) ⇒ 方向づけ"},
+{id:546,en:"positive",jp:"好意的な",hint:"pose(置かれた) ⇒ 確固たる・肯定的"},
+{id:547,en:"however",jp:"どれだけ〜であろうと",hint:"どれほど(how)〜でも(ever)"},
+{id:548,en:"whether",jp:"〜かどうか",hint:"whether A or B"},
+{id:549,en:"calculate",jp:"計算する",hint:"calcul(石) ⇒ 石で数を数える"},
+{id:550,en:"lean against",jp:"もたれかかる",hint:"lean(傾く) + against(対して)"},
+{id:551,en:"enable",jp:"可能にする",hint:"en(〜にする) + able(可能な)"},
+{id:552,en:"despite",jp:"〜にもかかわらず",hint:"de(下へ) + spite(見る) ⇒ 軽蔑 ⇒ 無視して"},
+{id:553,en:"media",jp:"メディア",hint:"medium(中間)の複数形 ⇒ 媒介するもの"},
+{id:554,en:"tax",jp:"税金",hint:"task(課された仕事)と同語源"},
+{id:555,en:"trouble",jp:"困難",hint:"turb(かき乱す) ⇒ 困難"},
+{id:556,en:"wish",jp:"したい",hint:"I wish to..."},
+{id:557,en:"draw up",jp:"作成する",hint:"図面を引く(draw) + 仕上げる(up)"},
+{id:558,en:"formally",jp:"フォーマルに",hint:"formal(公式の) + ly"},
+{id:559,en:"empty",jp:"空いている",hint:"un(ない) + occupied(占有) ⇒ 空っぽ"},
+{id:560,en:"core",jp:"主要な",hint:"cor(心臓) ⇒ 核心"},
+{id:561,en:"crew",jp:"チーム",hint:"cresc(成長・増加) ⇒ 増員された仲間"},
+{id:562,en:"middle",jp:"中旬",hint:"mid(中間)の"},
+{id:563,en:"on foot",jp:"徒歩で",hint:"足(foot)で"},
+{id:564,en:"overseas",jp:"海外で",hint:"海(sea)の向こう(over)で"},
+{id:565,en:"co-worker",jp:"同僚",hint:"co(共に) + worker(働く人)"},
+{id:566,en:"graduate",jp:"卒業する",hint:"grade(等級)を終える"},
+{id:567,en:"private",jp:"内密の",hint:"public(公)からpriv(奪う・分ける) ⇒ 私的な"},
+{id:568,en:"tip",jp:"ヒント",hint:"先端(tip) ⇒ 極秘情報 ⇒ ヒント"},
+{id:569,en:"agriculture",jp:"農業",hint:"agri(畑) + culture(耕す)"},
+{id:570,en:"railling",jp:"手すり",hint:"rail(レール) + ing"},
+{id:571,en:"theme",jp:"テーマ",hint:"提題(thesis)されたもの"},
+{id:572,en:"tie",jp:"つながり",hint:"ネクタイのタイ。結ぶもの"},
+{id:573,en:"fond",jp:"好ましい",hint:"be fond of (〜が好きだ)"},
+{id:574,en:"be supposed to",jp:"〜することになっている",hint:"suppose(想定する)されている"},
+{id:575,en:"related",jp:"関連のある",hint:"relate(関係させる) + ed"},
+{id:576,en:"confident",jp:"確信する",hint:"con(強意) + fid(信じる) ⇒ 自信がある"},
+{id:577,en:"I wonder if you",jp:"〜していただけませんか",hint:"あなたが〜するか迷う ⇒ してくれませんか"},
+{id:578,en:"worth",jp:"〜の価値がある",hint:"worthy(価値ある)"},
+{id:579,en:"enroll",jp:"申し込む",hint:"roll(名簿)にin(入れる)"},
+{id:580,en:"envionment",jp:"環境",hint:"environmentの略"},
+{id:581,en:"exactly",jp:"まったく",hint:"ex(外へ) + act(動かす) ⇒ 完了した ⇒ 正確な"},
+{id:582,en:"ideal",jp:"理想的な",hint:"idea(イデア・理想)の"},
+{id:583,en:"precisely",jp:"ちょうどに",hint:"precise(正確な) + ly"},
+{id:584,en:"suddenly",jp:"突然に",hint:"sudden(突然の) + ly"},
+{id:585,en:"capacity",jp:"定員",hint:"cap(つかむ)能力 ⇒ 収容力"},
+{id:586,en:"admission",jp:"入場料",hint:"ad(〜へ) + miss(送る) ⇒ 入場許可"},
+{id:587,en:"advantage",jp:"利点",hint:"advance(前進)している有利さ"},
+{id:588,en:"anniversary",jp:"記念日",hint:"ann(年) + vers(回る) ⇒ 年に一度"},
+{id:589,en:"candidate",jp:"候補者",hint:"candid(白い) ⇒ 白い服を着た候補者(潔白)"},
+{id:590,en:"career",jp:"職業",hint:"car(馬車)の道 ⇒ 経歴"},
+{id:591,en:"imagine",jp:"想像する",hint:"image(像)を心に描く"},
+{id:592,en:"perfect",jp:"最適な",hint:"per(完全に) + fect(成す)"},
+{id:593,en:"potential",jp:"潜在的な",hint:"potent(力)がある ⇒ 潜在能力"},
+{id:594,en:"separate",jp:"別の",hint:"se(離れて) + par(準備) ⇒ 分ける"},
+{id:595,en:"apart from",jp:"〜以外に",hint:"〜から離れて(apart)"},
+{id:596,en:"mechanical",jp:"機械的な",hint:"machine(機械)の"},
+{id:597,en:"rest",jp:"残り",hint:"the rest (残り)"},
+{id:598,en:"unique",jp:"珍しい",hint:"uni(一つ)の ⇒ 独特の"},
+{id:599,en:"disappointed",jp:"がっかりした",hint:"appoint(指名)をdis(外す) ⇒ 期待外れ"},
+{id:600,en:"modest",jp:"多くない",hint:"mode(適度)の ⇒ 控えめな"},
+{id:601,en:"ahead",jp:"先に",hint:"head(頭)を前にして ⇒ 前方に"},
+{id:602,en:"fail",jp:"失敗する",hint:"fail to (〜し損なう)"},
+{id:603,en:"install",jp:"設置する",hint:"in(中に) + stall(場所・小屋) ⇒ 設置する"},
+{id:604,en:"memorandum",jp:"社内通達",hint:"memo(メモ)の正式名称"},
+{id:605,en:"similar",jp:"似た",hint:"same(同じ)と同語源"},
+{id:606,en:"content",jp:"中身",hint:"con(共に) + ten(保つ) ⇒ 中身"},
+{id:607,en:"guideline",jp:"指針",hint:"guide(案内) + line(指針)"},
+{id:608,en:"neighborhood",jp:"地域",hint:"neighbor(隣人)のいる範囲"},
+{id:609,en:"patience",jp:"我慢",hint:"patient(患者・忍耐強い)の名詞"},
+{id:610,en:"tight",jp:"余裕のない",hint:"きつく張った ⇒ 余裕がない"},
+{id:611,en:"impressed",jp:"感銘を受ける",hint:"im(心に) + press(押す) ⇒ 感動させられた"},
+{id:612,en:"edge",jp:"端",hint:"エッジ(刃・縁)"},
+{id:613,en:"certain",jp:"確かな",hint:"certainly(確かに)の形容詞"},
+{id:614,en:"complaint",jp:"苦情",hint:"complain(文句を言う)の名詞"},
+{id:615,en:"concerned",jp:"心配する",hint:"関心がある ⇒ 気にかかる"},
+{id:616,en:"except",jp:"〜を除き",hint:"ex(外に) + cept(取る) ⇒ 除外する"},
+{id:617,en:"fuel",jp:"燃料",hint:"fire(火)と同語源"},
+{id:618,en:"grant",jp:"助成金",hint:"願いを叶える ⇒ 補助金を与える"},
+{id:619,en:"hesitate",jp:"遠慮する",hint:"stick(刺さる)と同語源。その場に留まる"},
+{id:620,en:"initial",jp:"初めの",hint:"init(行く) ⇒ 最初の"},
+{id:621,en:"occasionally",jp:"たまに",hint:"occasion(機会) + ally ⇒ 機会があれば"},
+{id:622,en:"round",jp:"一連のもの",hint:"rot(回る) ⇒ 一周"},
+{id:623,en:"shape",jp:"状態",hint:"形作る ⇒ 状態"},
+{id:624,en:"visual",jp:"視覚的な",hint:"vis(見る)の"},
+{id:625,en:"demand",jp:"需要",hint:"de(強意) + mand(命令) ⇒ 強く求める"},
+{id:626,en:"gather",jp:"集まる",hint:"together(一緒に)と同語源"},
+{id:627,en:"coupon",jp:"クーポン券",hint:"coupe(切る) ⇒ 切り離し券"},
+{id:628,en:"cross",jp:"渡る",hint:"十字に横切る"},
+{id:629,en:"medicine",jp:"薬",hint:"メディカルの元。薬"},
+{id:630,en:"predict",jp:"予測する",hint:"pre(前もって) + dict(言う)"},
+{id:631,en:"rank",jp:"ランク付けされている",hint:"rank(列)に並べる ⇒ 格付け"},
+{id:632,en:"regret",jp:"残念に思う",hint:"greet(泣く) ⇒ 悔やんで泣く"},
+{id:633,en:"decorate",jp:"飾る",hint:"dec(美) ⇒ 装飾する"},
+{id:634,en:"agency",jp:"代理店",hint:"ag(行う)組織 ⇒ 代理店"},
+{id:635,en:"apologize",jp:"謝る",hint:"apo(離れて) + log(言葉) ⇒ 弁明・謝罪"},
+{id:636,en:"approximately",jp:"約",hint:"approach(近づく) ⇒ 近似の"},
+{id:637,en:"architect",jp:"建築士",hint:"archi(主な) + tect(大工)"},
+{id:638,en:"besides",jp:"〜に加えて",hint:"be(ある) + side(横に) + s ⇒ 横に並んで"},
+{id:639,en:"complimentary",jp:"無料の",hint:"comply(満たす) ⇒ 称賛・贈り物の"},
+{id:640,en:"congratulations",jp:"おめでとう",hint:"con(共に) + grat(喜ぶ)"},
+{id:641,en:"crowded",jp:"混み合っている",hint:"crowd(群衆)がいる"},
+{id:642,en:"depend",jp:"〜による",hint:"de(下に) + pend(ぶら下がる) ⇒ 依存する"},
+{id:643,en:"even though",jp:"〜だけれども",hint:"even(強調) + though(〜だが)"},
+{id:644,en:"paperwork",jp:"書類仕事",hint:"paper(書類) + work(仕事)"},
+{id:645,en:"phase",jp:"段階",hint:"phase(現れ) ⇒ 局面・段階"},
+{id:646,en:"praise",jp:"ほめる",hint:"price(価値)と同語源。価値を認める"},
+{id:647,en:"reliable",jp:"信頼できる",hint:"rely(頼る) + able(できる)"},
+{id:648,en:"weigh",jp:"重さを量る",hint:"weight(重さ)の動詞"},
+{id:649,en:"artificial",jp:"人工的な",hint:"art(技術) + ficial(作る)"},
+{id:650,en:"customs",jp:"税関",hint:"国の慣習(custom)を守る場所"},
+{id:651,en:"defect",jp:"欠陥",hint:"de(離れて) + fect(作る) ⇒ 不完全な出来"},
+{id:652,en:"equal",jp:"等しい",hint:"equ(平らな) ⇒ 等しい"},
+{id:653,en:"forecast",jp:"予測",hint:"fore(前もって) + cast(投げる)"},
+{id:654,en:"link",jp:"つながり",hint:"鎖の輪 ⇒ つながり"},
+{id:655,en:"match",jp:"合う",hint:"make(作る)と同語源。似合う・調和する"},
+{id:656,en:"observe",jp:"見学する",hint:"観察する(observe)"},
+{id:657,en:"outstanding",jp:"未払いの",hint:"out(外に) + standing(立っている) ⇒ 残っている"},
+{id:658,en:"amazing",jp:"驚くべき",hint:"maze(迷路)で迷うほど驚く"},
+{id:659,en:"challenging",jp:"難しい",hint:"挑戦(challenge)しがいがある"},
+{id:660,en:"comfortable",jp:"快適な",hint:"comfort(慰める) + able ⇒ 快適な"},
+{id:661,en:"crop",jp:"作物",hint:"収穫物"},
+{id:662,en:"lease",jp:"賃貸契約",hint:"lax(緩める) ⇒ 手放して貸す"},
+{id:663,en:"vote",jp:"投票する",hint:"vow(誓い) ⇒ 意思表示・投票"},
+{id:664,en:"warehouse",jp:"倉庫",hint:"ware(商品) + house(家)"},
+{id:665,en:"huge",jp:"とても大きな",hint:"high(高い)と同語源"},
+{id:666,en:"visible",jp:"見える",hint:"visual(視覚の) + ible(できる)"},
+{id:667,en:"bulk",jp:"大部分",hint:"belly(腹)と同語源。膨らみ・大きさ"},
+{id:668,en:"journey",jp:"旅",hint:"journ(一日)の道のり"},
+{id:669,en:"stuck",jp:"動きが取れない",hint:"stick(突き刺さる)の過去分詞"},
+{id:670,en:"legal",jp:"法律に関する",hint:"leg(法律)の"},
+{id:671,en:"sculpture",jp:"彫刻",hint:"scalp(刻む)もの"},
+{id:672,en:"volunteer",jp:"自ら進んでする",hint:"vol(意志) ⇒ 自発的な人"},
+{id:673,en:"prop",jp:"立てかける",hint:"支柱(prop)で支える"},
+{id:674,en:"appreciate",jp:"感謝する",hint:"ap(〜へ) + preci(価値) ⇒ 価値を認める"},
+{id:675,en:"recognize",jp:"誰だか分かる",hint:"re(再び) + cogn(知る) ⇒ 認知する"},
+{id:676,en:"consistent",jp:"一貫性のある",hint:"con(共に) + sist(立つ) ⇒ 常に同じ位置に立つ"},
+{id:677,en:"alternative",jp:"代わりとなる",hint:"alter(変える) ⇒ 代替案"},
+{id:678,en:"automated",jp:"自動化された",hint:"auto(自ら) + matos(動く)"},
+{id:679,en:"broadcast",jp:"放送する",hint:"broad(広く) + cast(投げる) ⇒ 放送"},
+{id:680,en:"combine",jp:"兼ね備える",hint:"com(共に) + bine(2つ) ⇒ 結合する"},
+{id:681,en:"consist of",jp:"〜で構成されている",hint:"con(共に) + sist(立つ) ⇒ 成り立つ"},
+{id:682,en:"critical",jp:"とても重要な",hint:"crisis(危機)の ⇒ 重要な"},
+{id:683,en:"definitely",jp:"必ず",hint:"define(定義)された ⇒ 明確に・絶対に"},
+{id:684,en:"finding",jp:"調査結果",hint:"find(見つける)こと"},
+{id:685,en:"intend",jp:"〜しようとする",hint:"in(〜へ) + tend(向ける) ⇒ 意図する"},
+{id:686,en:"protective",jp:"保護用の",hint:"protect(守る)ための"},
+{id:687,en:"refer",jp:"参照する",hint:"re(戻って) + fer(運ぶ) ⇒ 参照する"},
+{id:688,en:"remove",jp:"取り除く",hint:"re(離れて) + move(動かす)"},
+{id:689,en:"residential",jp:"居住の",hint:"resident(住民)の"},
+{id:690,en:"summarize",jp:"要約する",hint:"summary(サマリー)を作る"},
+{id:691,en:"thorough",jp:"徹底的な",hint:"through(通り抜ける)と同語源。隅々まで"},
+{id:692,en:"examine",jp:"細かく調べる",hint:"試験(exam)する"},
+{id:693,en:"contemporary",jp:"現代的な",hint:"con(共に) + tempo(時間) ⇒ 同時代の"},
+{id:694,en:"otherwise",jp:"そうでなければ",hint:"other(別の) + wise(やり方)で"},
+{id:695,en:"experiment",jp:"実験",hint:"experience(経験)と同語源。試すこと"},
+{id:696,en:"interval",jp:"間隔",hint:"inter(間) + val(壁) ⇒ 間隔"},
+{id:697,en:"proportion",jp:"割合",hint:"pro(〜に合わせて) + portion(部分) ⇒ 比率"},
+{id:698,en:"recruit",jp:"採用する",hint:"cresc(成長) ⇒ 新メンバーを入れる"},
+{id:699,en:"accurate",jp:"正確な",hint:"ac(〜へ) + cure(注意) ⇒ 注意深くやった"},
+{id:700,en:"difficulty",jp:"困難",hint:"difficult(難しい)こと"},
+{id:701,en:"eligible",jp:"資格のある",hint:"e(外へ) + lig(選ぶ) ⇒ 選ばれる資格がある"},
+{id:702,en:"found",jp:"設立する",hint:"foundation(基礎・設立)"},
+{id:703,en:"involve",jp:"求められる",hint:"in(中に) + volve(巻く) ⇒ 巻き込む・含む"},
+{id:704,en:"notify",jp:"知らせる",hint:"note(メモ) + fy(化する) ⇒ 通知する"},
+{id:705,en:"postpone",jp:"延期する",hint:"post(後ろへ) + pone(置く) ⇒ 後回しにする"},
+{id:706,en:"proceed",jp:"進む",hint:"pro(前へ) + ceed(進む)"},
+{id:707,en:"significant",jp:"大きな",hint:"sign(印)ある ⇒ 重要な・かなりの"},
+{id:708,en:"warranty",jp:"保証",hint:"guarantee(保証)と同語源"},
+{id:709,en:"assure",jp:"断言する",hint:"as(〜へ) + sure(確かな) ⇒ 保証する"},
+{id:710,en:"athlete",jp:"スポーツ選手",hint:"ath(戦う)人 ⇒ アスリート"},
+{id:711,en:"double",jp:"倍になる",hint:"duo(2つ) + ple(折る)"},
+{id:712,en:"generous",jp:"手厚い",hint:"generate(生む) ⇒ 気前よく生み出す ⇒ 寛大な"},
+{id:713,en:"monitor",jp:"観察する",hint:"mon(警告)する人 ⇒ 監視・観察"},
+{id:714,en:"balance",jp:"残金",hint:"bi(2つ) + lanx(皿) ⇒ 天秤 ⇒ 収支の差額"},
+{id:715,en:"exclusive",jp:"高級な",hint:"ex(外へ) + cluse(閉じる) ⇒ 他を閉め出す"},
+{id:716,en:"situation",jp:"状況",hint:"site(場所)の状態"},
+{id:717,en:"whereas",jp:"〜であるのに対して",hint:"where(場所) + as(〜として) ⇒ 一方で"},
+{id:718,en:"reimburse",jp:"払い戻す",hint:"re(再び) + in(中に) + burse(財布)"},
+{id:719,en:"strict",jp:"厳しい",hint:"restrict(制限する)と同語源。きつい"},
+{id:720,en:"appeal",jp:"好まれる",hint:"ap(〜へ) + peal(駆り立てる) ⇒ 訴える"},
+{id:721,en:"bound",jp:"〜行きの",hint:"bind(縛る)の過去分詞。行先に縛られている"},
+{id:722,en:"essential",jp:"極めて重要な",hint:"essence(本質)の"},
+{id:723,en:"fluent",jp:"流暢な",hint:"flu(流れる)ような"},
+{id:724,en:"negotiation",jp:"交渉",hint:"ne(否定) + otium(暇) ⇒ 暇じゃない(仕事)"},
+{id:725,en:"ouccur",jp:"起こる",hint:"oc(〜へ) + cur(走る) ⇒ こちらへやって来る"},
+{id:726,en:"workforce",jp:"労働人口",hint:"work(労働) + force(力・軍隊)"},
+{id:727,en:"stable",jp:"安定した",hint:"stand(立つ)できる ⇒ 安定"},
+{id:728,en:"aid",jp:"援助",hint:"First aid (応急処置)のaid"},
+{id:729,en:"concerning",jp:"〜に関して",hint:"concern(関わる)して"},
+{id:730,en:"emphasize",jp:"強調する",hint:"emphasis(強調)する"},
+{id:731,en:"honor",jp:"栄誉",hint:"honest(正直)と同語源。名誉"},
+{id:732,en:"infer",jp:"推測する",hint:"in(中へ) + fer(運ぶ) ⇒ 結論を導く"},
+{id:733,en:"inventory",jp:"在庫",hint:"in(中へ) + vent(来る) ⇒ 入ってきたもの一覧"},
+{id:734,en:"major",jp:"重大な",hint:"mag(大きい) ⇒ 主要な"},
+{id:735,en:"measure",jp:"対策",hint:"寸法を測る ⇒ 策を講じる"},
+{id:736,en:"progress",jp:"進歩",hint:"pro(前へ) + gress(進む)"},
+{id:737,en:"remarkable",jp:"素晴らしい",hint:"remark(注目)できるほど"},
+{id:738,en:"solution",jp:"解決法",hint:"solve(解く)こと"},
+{id:739,en:"unfortunately",jp:"残念ながら",hint:"fortune(運)が無い"},
+{id:740,en:"celebrate",jp:"祝う",hint:"cel(高い) ⇒ 称える"},
+{id:741,en:"hospitality",jp:"手厚いもてなし",hint:"hosp(客)をもてなすこと"},
+{id:742,en:"pharmacy",jp:"薬局",hint:"pharma(薬)の場所"},
+{id:743,en:"primary",jp:"主な",hint:"prime(第一の) ⇒ 主要な"},
+{id:744,en:"express",jp:"言い残す",hint:"ex(外へ) + press(押す) ⇒ 表現する"},
+{id:745,en:"in accordance with",jp:"〜に則って",hint:"accord(一致) + dance ⇒ 調和して"},
+{id:746,en:"modify",jp:"変更する",hint:"mode(型) + fy(化する) ⇒ 修正する"},
+{id:747,en:"on the whole",jp:"全体として",hint:"whole(全体)の上で"},
+{id:748,en:"practical",jp:"実用的な",hint:"practice(練習・実行)できる"},
+{id:749,en:"priority",jp:"優先事項",hint:"prior(より前の)こと ⇒ 優先"},
+{id:750,en:"rapidly",jp:"急速に",hint:"rapid(速い) + ly"},
+{id:751,en:"ban",jp:"禁止する",hint:"ban(禁止令)"},
+{id:752,en:"contrast",jp:"違い",hint:"contra(反対に) + st(立つ) ⇒ 対比"},
+{id:753,en:"draft",jp:"原稿",hint:"draw(引く)したもの ⇒ 下書き"},
+{id:754,en:"behave",jp:"行動する",hint:"have(持つ) ⇒ 身を保つ ⇒ 振る舞う"},
+{id:755,en:"congested",jp:"混雑した",hint:"con(共に) + gest(運ぶ) ⇒ 一箇所に詰め込まれた"},
+{id:756,en:"panel",jp:"一団",hint:"パネルディスカッションのパネリスト団"},
+{id:757,en:"urge",jp:"強く勧める",hint:"urgency(緊急) ⇒ 急き立てる"},
+{id:758,en:"flexible",jp:"融通の利く",hint:"flex(曲がる) + ible(できる) ⇒ 柔軟な"},
+{id:759,en:"acquire",jp:"得る",hint:"ac(〜へ) + quire(求める) ⇒ 獲得する"},
+{id:760,en:"assessment",jp:"評価",hint:"ad(〜へ) + sess(座る) ⇒ 近くで評価する"},
+{id:761,en:"briefly",jp:"手短に",hint:"ブリーフ(短い) + ly"},
+{id:762,en:"deposit",jp:"頭金",hint:"de(下に) + posit(置く) ⇒ 預ける・手付金"},
+{id:763,en:"entire",jp:"全体の",hint:"entity(実体) ⇒ 完全体 ⇒ 全体の"},
+{id:764,en:"especially",jp:"特に",hint:"special(特別)に"},
+{id:765,en:"evaluate",jp:"評価する",hint:"value(価値)を見出す"},
+{id:766,en:"imply",jp:"暗に伝える",hint:"im(中に) + ply(折る) ⇒ 意味を包み込む"},
+{id:767,en:"merger",jp:"合併",hint:"M&AのM。merge(溶け合わせる)"},
+{id:768,en:"object",jp:"反対する",hint:"ob(相手に) + ject(投げる) ⇒ 反対する"},
+{id:769,en:"premises",jp:"建物",hint:"pre(前に) + miss(送る) ⇒ 前述の事項(土地)"},
+{id:770,en:"steadily",jp:"着実に",hint:"steady(安定した) + ly"},
+{id:771,en:"concise",jp:"簡潔な",hint:"con(完全に) + cise(切る) ⇒ 無駄を切り落とした"},
+{id:772,en:"constant",jp:"絶え間ない",hint:"con(共に) + stant(立つ) ⇒ 常にそこに立つ"},
+{id:773,en:"debate",jp:"議論",hint:"de(下へ) + bat(叩く) ⇒ 徹底的に戦う"},
+{id:774,en:"decline",jp:"減る",hint:"de(下へ) + cline(傾く)"},
+{id:775,en:"insurance",jp:"保険",hint:"in(中へ) + sure(確かな) ⇒ 安心を保証"},
+{id:776,en:"confusing",jp:"わかりにくい",hint:"confuse(混乱させる)ような"},
+{id:777,en:"inspector",jp:"検査官",hint:"in(中を) + spect(見る)人"},
+{id:778,en:"merchandise",jp:"商品",hint:"merchant(商人)が扱うもの"},
+{id:779,en:"prevent",jp:"阻止する",hint:"pre(前に) + vent(来る) ⇒ 先回りして防ぐ"},
+{id:780,en:"anticipate",jp:"予想する",hint:"anti(前もって) + cip(取る) ⇒ 先取りする"},
+{id:781,en:"aspect",jp:"側面",hint:"a(〜へ) + spect(見る) ⇒ 見え方"},
+{id:782,en:"attempt",jp:"試みる",hint:"at(〜へ) + tempt(試す)"},
+{id:783,en:"claim",jp:"主張する",hint:"clam(叫ぶ) ⇒ 主張する"},
+{id:784,en:"comprehensive",jp:"完全な",hint:"con(共に) + prehense(つかむ) ⇒ 包括的な"},
+{id:785,en:"force",jp:"余儀なく〜させる",hint:"fort(強い)力でさせる"},
+{id:786,en:"promise",jp:"約束する",hint:"pro(前もって) + miss(送る) ⇒ 約束"},
+{id:787,en:"superior",jp:"優れている",hint:"super(上)の"},
+{id:788,en:"political",jp:"政治の",hint:"politics(政治)の"},
+{id:789,en:"sensitive",jp:"感度の高い",hint:"sense(感覚)が鋭い ⇒ 繊細な"},
+{id:790,en:"social",jp:"社会の",hint:"soci(仲間)の ⇒ 社会の"},
+{id:791,en:"tentative",jp:"仮の",hint:"tent(テント) ⇒ 固定されていない ⇒ 仮の"},
+{id:792,en:"advisable",jp:"望ましい",hint:"advise(助言)できるほど良い"},
+{id:793,en:"argue",jp:"言い争う",hint:"arg(輝く) ⇒ 白黒はっきりさせる"},
+{id:794,en:"defend",jp:"正当性を主張する",hint:"de(離れて) + fend(打つ) ⇒ 防御する"},
+{id:795,en:"deserve",jp:"受けるのに値する",hint:"de(完全に) + serve(仕える) ⇒ 奉仕する価値"},
+{id:796,en:"element",jp:"要因",hint:"LMN(アルファベット) ⇒ 基本要素"},
+{id:797,en:"border",jp:"国境",hint:"bound(境界)と同語源"},
+{id:798,en:"extensive",jp:"幅広い",hint:"ex(外へ) + tend(伸ばす) ⇒ 広範囲の"},
+{id:799,en:"function",jp:"職務",hint:"機能(function)を果たすこと"},
+{id:800,en:"global",jp:"世界的な",hint:"globe(球・地球)の"},
+{id:801,en:"judge",jp:"判断する",hint:"jus(法) + dic(言う) ⇒ 判決を下す"},
+{id:802,en:"real estate",jp:"不動産",hint:"Real(実在する) + Estate(財産)"},
+{id:803,en:"survive",jp:"生き残る",hint:"sur(超えて) + vive(生きる) ⇒ サバイブ"},
+{id:804,en:"traditional",jp:"伝統的な",hint:"trans(超えて) + da(与える) ⇒ 伝承"},
+{id:805,en:"absolutely",jp:"まったく",hint:"absolute(絶対的な) + ly"},
+{id:806,en:"worldwide",jp:"世界中に",hint:"ワールドワイド"},
+{id:807,en:"favorable",jp:"好意的な",hint:"favor(好意)のある"},
+{id:808,en:"length",jp:"長さ",hint:"long(長い)の名詞"},
+{id:809,en:"relatively",jp:"比較的に",hint:"relative(比較の) + ly"},
+{id:810,en:"count on",jp:"頼りにする",hint:"数に入れて(count)乗っかる(on)"},
+{id:811,en:"inconvenience",jp:"迷惑",hint:"convenience(便利)の否定"},
+{id:812,en:"incorrect",jp:"不正確な",hint:"correct(正しい)の否定"},
+{id:813,en:"mayor",jp:"市長",hint:"major(主要な)と同語源。町の長"},
+{id:814,en:"statistics",jp:"統計値",hint:"state(国家) ⇒ 国家の状態を表す数値"},
+{id:815,en:"label",jp:"ラベルをつける",hint:"lab(つまむ)もの ⇒ 札"},
+{id:816,en:"memorable",jp:"印象的な",hint:"memory(記憶) + able(できる)"},
+{id:817,en:"nominate",jp:"候補に挙げる",hint:"name(名前)を挙げる ⇒ ノミネート"},
+{id:818,en:"dramatic",jp:"劇的な",hint:"drama(演劇)のような"},
+{id:819,en:"persuade",jp:"説得する",hint:"per(完全に) + suade(甘い) ⇒ 甘い言葉で誘う"},
+{id:820,en:"delighted",jp:"とても喜んでいる",hint:"light(光)のような喜び"},
+{id:821,en:"sufficient",jp:"十分な",hint:"suf(下に) + fic(作る) ⇒ 満たされた"},
+{id:822,en:"exhausted",jp:"疲れ果てた",hint:"ex(外へ) + haust(空っぽ) ⇒ 使い果たす"},
+{id:823,en:"acknowledge",jp:"認める",hint:"ac(〜へ) + knowledge(知) ⇒ 知っていると認める"},
+{id:824,en:"consequence",jp:"結果",hint:"con(共に) + sec(続く) ⇒ 続いて起こること"},
+{id:825,en:"dispose of",jp:"〜を処分する",hint:"dis(離れて) + pose(置く) ⇒ 捨てる"},
+{id:826,en:"implement",jp:"実施する",hint:"im(中へ) + ple(満たす) ⇒ 満たして実行する"},
+{id:827,en:"ensure",jp:"確実に行う",hint:"en(〜にする) + sure(確実)"},
+{id:828,en:"component",jp:"部品",hint:"com(共に) + pon(置く) ⇒ 構成要素"},
+{id:829,en:"contrary",jp:"反した",hint:"contra(反対に) ⇒ 対照的な"},
+{id:830,en:"appropriate",jp:"適切な",hint:"proper(適切な)と同語源"},
+{id:831,en:"determine",jp:"究明する",hint:"de(完全に) + term(境界) ⇒ 境界を決める"},
+{id:832,en:"evidence",jp:"証拠",hint:"e(外に) + vide(見える) ⇒ 明らかなもの"},
+{id:833,en:"institution",jp:"機関",hint:"institute(設立する)されたもの"},
+{id:834,en:"municipal",jp:"市営の",hint:"muni(義務・奉仕) ⇒ 自治体の"},
+{id:835,en:"retain",jp:"保管する",hint:"re(後ろに) + tain(保つ) ⇒ 保持する"},
+{id:836,en:"supplement",jp:"加算する",hint:"sub(下から) + ple(満たす) ⇒ 補う"},
+{id:837,en:"generate",jp:"生み出す",hint:"gene(生む) ⇒ 電気・利益を生む"},
+{id:838,en:"occupy",jp:"占める",hint:"oc(〜へ) + cup(つかむ) ⇒ 占領する"},
+{id:839,en:"substitute",jp:"代わりをする",hint:"sub(代わりの) + stitute(立つ)"},
+{id:840,en:"mutual",jp:"お互いの",hint:"mut(変わる) ⇒ 交換できる ⇒ 相互の"},
+{id:841,en:"enhance",jp:"高める",hint:"en(〜にする) + high(高い) ⇒ 高める"},
+{id:842,en:"existing",jp:"既存の",hint:"exist(存在する)している"},
+{id:843,en:"explore",jp:"探索する",hint:"ex(外へ) + plore(叫ぶ) ⇒ 猟犬を呼んで探検する"},
+{id:844,en:"clarify",jp:"明確にする",hint:"clear(クリア)にする"},
+{id:845,en:"complex",jp:"複雑な",hint:"com(共に) + plex(編む) ⇒ 複雑な"},
+{id:846,en:"concentrate",jp:"集中する",hint:"con(共に) + center(中心) ⇒ 集中する"},
+{id:847,en:"concept",jp:"概念",hint:"con(共に) + cept(つかむ) ⇒ 構想"},
+{id:848,en:"dedicated",jp:"打ちこんでいる",hint:"de(強意) + dic(言う) ⇒ 宣言して捧げる"},
+{id:849,en:"apprentice",jp:"見習い",hint:"ap(〜へ) + prehend(つかむ) ⇒ 技術をつかむ人"},
+{id:850,en:"exposed",jp:"さらされた",hint:"ex(外へ) + pose(置く) ⇒ さらす"},
+{id:851,en:"impact",jp:"影響",hint:"im(中に) + pact(留める) ⇒ 衝撃"},
+{id:852,en:"numerous",jp:"数多くの",hint:"number(数)がたくさんある"},
+{id:853,en:"settle",jp:"解決する",hint:"set(置く) ⇒ 落ち着く ⇒ 解決する"},
+{id:854,en:"attire",jp:"服装",hint:"tire(列) ⇒ 整える ⇒ 服装"},
+{id:855,en:"diversity",jp:"多様性",hint:"di(離れて) + vers(向く) ⇒ 別々を向いた"},
+{id:856,en:"inspire",jp:"意欲を掻き立てる",hint:"in(中へ) + spire(息) ⇒ 息吹を吹き込む"},
+{id:857,en:"transit",jp:"輸送",hint:"trans(超えて) + it(行く) ⇒ 通過・輸送"},
+{id:858,en:"multiple",jp:"多数の",hint:"multi(多くの) + ple(折る) ⇒ 倍数・多数の"},
+{id:859,en:"solve",jp:"解決する",hint:"ソリューション(解決)の動詞"},
+{id:860,en:"insert",jp:"入れる",hint:"in(中に) + ser(つなぐ) ⇒ 挿入する"},
+{id:861,en:"coordinate",jp:"まとめる",hint:"co(共に) + ord(順序) ⇒ 調整する"},
+{id:862,en:"suspend",jp:"一時的に止める",hint:"sus(下に) + pend(吊るす) ⇒ 宙ぶらりんにする"},
+{id:863,en:"compensate",jp:"補償する",hint:"com(共に) + pense(払う) ⇒ 埋め合わせる"},
+{id:864,en:"relevant",jp:"関係のある",hint:"relate(関係させる) ⇒ 適切な"},
+{id:865,en:"correspond",jp:"連絡する",hint:"cor(共に) + respond(答える) ⇒ 応答し合う"},
+{id:866,en:"invent",jp:"発明する",hint:"in(中へ) + vent(来る) ⇒ 新しいものに出会う"},
+{id:867,en:"weaken",jp:"弱める",hint:"weak(弱い) + en(にする)"},
+{id:868,en:"translate",jp:"翻訳する",hint:"trans(超えて) + late(運ぶ) ⇒ 翻訳する"},
+{id:869,en:"commission",jp:"歩合",hint:"commit(委任)された報酬"},
+{id:870,en:"sweep",jp:"掃く",hint:"swoop(飛びかかる)と同語源。さっと掃く"},
+{id:871,en:"administrative",jp:"管理の",hint:"ad(〜へ) + minister(仕える) ⇒ 運営の"},
+{id:872,en:"deserted",jp:"人気のない",hint:"desert(砂漠)のような"},
+{id:873,en:"prove",jp:"〜である",hint:"証明する ⇒ 判明する"},
+{id:874,en:"severe",jp:"深刻な",hint:"sev(厳格な) ⇒ 厳しい"},
+{id:875,en:"admire",jp:"称賛する",hint:"ad(〜へ) + mire(驚く) ⇒ 感嘆する"},
+{id:876,en:"destination",jp:"目的地",hint:"de(完全に) + stin(立つ) ⇒ 目的地"},
+{id:877,en:"disturb",jp:"邪魔をする",hint:"dis(バラバラに) + turb(かき乱す)"},
+{id:878,en:"vessel",jp:"船",hint:"vase(花瓶)と同語源。器 ⇒ 船"},
+{id:879,en:"authorization",jp:"許可",hint:"author(権威)を与える"},
+{id:880,en:"content",jp:"満足している",hint:"中身(content)が満たされた"},
+{id:881,en:"conflict",jp:"対立",hint:"con(共に) + flict(打つ) ⇒ 衝突"},
+{id:882,en:"accommodation",jp:"宿泊施設",hint:"accommodate(収容する)場所"},
+{id:883,en:"physician",jp:"内科医",hint:"physics(物理・自然) ⇒ 体の自然を診る人"},
+{id:884,en:"strength",jp:"強み",hint:"strong(強い)の名詞"},
+{id:885,en:"surrounding",jp:"周辺の",hint:"sur(上から) + round(回る) ⇒ 囲むもの"},
+{id:886,en:"transaction",jp:"取引",hint:"trans(超えて) + act(行う) ⇒ トランザクション"},
+{id:887,en:"coincidence",jp:"偶然",hint:"co(共に) + in(中へ) + cide(落ちる) ⇒ 同時に起こる"},
+{id:888,en:"confess",jp:"告白する",hint:"con(完全に) + fess(話す)"},
+{id:889,en:"conscious",jp:"意識的な",hint:"con(共に) + sci(知る) ⇒ 意識している"},
+{id:890,en:"convert",jp:"交換する",hint:"con(完全に) + vert(向く) ⇒ 転換する"},
+{id:891,en:"donation",jp:"寄付",hint:"donor(ドナー・提供者)の寄付"},
+{id:892,en:"elect",jp:"選出する",hint:"e(外へ) + lect(選ぶ) ⇒ 選挙する"},
+{id:893,en:"fascinating",jp:"とても面白い",hint:"fascinate(魅了する)ような"},
+{id:894,en:"grateful",jp:"感謝している",hint:"grate(喜び)でいっぱい"},
+{id:895,en:"insight",jp:"知識",hint:"in(中を) + sight(見る) ⇒ 洞察力"},
+{id:896,en:"interactive",jp:"双方向性の",hint:"inter(相互) + active(活動)"},
+{id:897,en:"itinerary",jp:"旅行日程",hint:"itiner(旅) ⇒ アイ旅程ナリー"},
+{id:898,en:"omit",jp:"省く",hint:"o(反対) + mit(送る) ⇒ 送らずにおく ⇒ 省略"},
+{id:899,en:"possess",jp:"持つ",hint:"pot(力) + sess(座る) ⇒ 占有する"},
+{id:900,en:"prompt",jp:"素早い",hint:"pro(前へ) + empt(取り出す) ⇒ 即座の"},
+{id:901,en:"reverse",jp:"裏側の",hint:"re(後ろへ) + vers(回る) ⇒ 逆"},
+{id:902,en:"reward",jp:"報奨金",hint:"re(返す) + ward(見張る) ⇒ 報いる"},
+{id:903,en:"entitle",jp:"権利を与える",hint:"title(タイトル・資格)を与える"},
+{id:904,en:"fasten",jp:"締める",hint:"fast(しっかりした)状態にする"},
+{id:905,en:"external",jp:"外部の",hint:"ex(外)の"},
+{id:906,en:"auditor",jp:"会計検査官",hint:"audit(聞く) + or(人) ⇒ 聴聞する人"},
+{id:907,en:"excessive",jp:"過度の",hint:"ex(外へ) + cess(進む) ⇒ 行き過ぎた"},
+{id:908,en:"extract",jp:"抽出する",hint:"ex(外へ) + tract(引く) ⇒ エキス"},
+{id:909,en:"nutritional",jp:"栄養に関する",hint:"nutrition(栄養)の"},
+{id:910,en:"duplicate",jp:"複製する",hint:"dual(2つの) + plic(折る) ⇒ 写しを作る"},
+{id:911,en:"attribute",jp:"〜の結果であると考える",hint:"at(〜へ) + tribute(与える) ⇒ 属性・せいにする"},
+{id:912,en:"diligent",jp:"勤勉な",hint:"di(離れて) + lig(選ぶ) ⇒ 選び抜いて励む"},
+{id:913,en:"discretion",jp:"判断力",hint:"discrete(分離した) ⇒ 区別できる ⇒ 思慮分別"},
+{id:914,en:"intensive",jp:"集中的な",hint:"in(中へ) + tend(伸ばす) ⇒ 強烈な"},
+{id:915,en:"ongoing",jp:"現在行なわれている",hint:"on(継続) + going(進行)"},
+{id:916,en:"resume",jp:"再発する",hint:"re(再び) + sume(取る) ⇒ 再開する"},
+{id:917,en:"trustee",jp:"評議員",hint:"trust(信頼)された人"},
+{id:918,en:"compromise",jp:"妥協する",hint:"com(共に) + promise(約束) ⇒ 互いに譲歩"},
+{id:919,en:"accumulate",jp:"累積する",hint:"ac(〜へ) + cumulate(積む)"},
+{id:920,en:"adjacent",jp:"隣接した",hint:"ad(〜へ) + jacent(横たわる)"},
+{id:921,en:"assume",jp:"思う",hint:"as(〜へ) + sume(取る) ⇒ 態度をとる、仮定する"},
+{id:922,en:"boost",jp:"高める",hint:"押し上げる ⇒ 高める"},
+{id:923,en:"confidential",jp:"秘密の",hint:"confide(信頼する) ⇒ 信頼できる人にしか見せない"},
+{id:924,en:"constraint",jp:"制約",hint:"con(共に) + strain(縛る)"},
+{id:925,en:"distinguish",jp:"際立たせる",hint:"di(離れて) + stingu(刺す) ⇒ 区別する"},
+{id:926,en:"dominate",jp:"支配する",hint:"domin(主人) ⇒ ドミネーション"},
+{id:927,en:"impose",jp:"課す",hint:"im(上に) + pose(置く) ⇒ 押し付ける"},
+{id:928,en:"persist",jp:"根強く続ける",hint:"per(通して) + sist(立つ) ⇒ 固執する"},
+{id:929,en:"pivotal",jp:"重要な",hint:"pivot(回転軸)となる ⇒ 中心的な"},
+{id:930,en:"prominent",jp:"有名な",hint:"pro(前へ) + min(突き出る) ⇒ 目立つ"},
+{id:931,en:"remote",jp:"わずかな",hint:"re(離れて) + move(動かす) ⇒ 遠く離れた"},
+{id:932,en:"restricted",jp:"制限された",hint:"re(後ろへ) + strict(縛る)"},
+{id:933,en:"terminate",jp:"打ち切る",hint:"term(境界)を引く ⇒ 終わらせる"},
+{id:934,en:"verify",jp:"確かめる",hint:"veri(真実) + fy(化する)"},
+{id:935,en:"adopt",jp:"導入する",hint:"ad(〜へ) + opt(選ぶ) ⇒ 採用する"},
+{id:936,en:"allocate",jp:"割り当てる",hint:"ad(〜へ) + locate(置く)"},
+{id:937,en:"attain",jp:"達成する",hint:"at(〜へ) + tain(つかむ)"},
+{id:938,en:"collapse",jp:"崩壊する",hint:"col(共に) + lapse(落ちる)"},
+{id:939,en:"commemorate",jp:"祝う",hint:"memory(記憶)に残して祝う"},
+{id:940,en:"consent",jp:"承認",hint:"con(共に) + sent(感じる) ⇒ コンセント(同意)"},
+{id:941,en:"contradict",jp:"矛盾する",hint:"contra(反対に) + dict(言う)"},
+{id:942,en:"deficit",jp:"赤字",hint:"de(欠ける) + fic(作る) ⇒ 不足"},
+{id:943,en:"derive",jp:"得る",hint:"de(川から) + rive(流れる) ⇒ 由来する"},
+{id:944,en:"detect",jp:"感知する",hint:"detective(探偵)がすること"},
+{id:945,en:"dimension",jp:"寸法",hint:"di(離れて) + mens(測る) ⇒ 寸法・次元"},
+{id:946,en:"discipline",jp:"自制",hint:"disciple(弟子) ⇒ 弟子へのしつけ"},
+{id:947,en:"dispute",jp:"論争",hint:"dis(離れて) + pute(考える) ⇒ 意見が分かれる"},
+{id:948,en:"distinct",jp:"はっきり区別できる",hint:"di(離れて) + stinct(刺す) ⇒ 際立った"},
+{id:949,en:"domain",jp:"領域",hint:"domin(主人)の領土 ⇒ 領域"},
+{id:950,en:"eliminate",jp:"削減する",hint:"e(外へ) + limin(境界) ⇒ 境界の外に出す"},
+{id:951,en:"eventually",jp:"ようやく",hint:"event(出来事)の結果として"},
+{id:952,en:"fluctuate",jp:"変動する",hint:"flu(流れる) ⇒ 波のように動く"},
+{id:953,en:"highlight",jp:"明らかにする",hint:"high(高い) + light(光) ⇒ 強調する"},
+{id:954,en:"investigate",jp:"詳しく調べる",hint:"in(中へ) + vestigate(足跡) ⇒ 追跡調査"},
+{id:955,en:"markedly",jp:"著しく",hint:"mark(印)が付くほど"},
+{id:956,en:"mature",jp:"成熟した",hint:"mat(朝) ⇒ 早い ⇒ 熟した"},
+{id:957,en:"moderately",jp:"少し",hint:"moderate(適度な) + ly"},
+{id:958,en:"perspective",jp:"観点",hint:"per(通して) + spect(見る) ⇒ 遠近法・観点"},
+{id:959,en:"preserve",jp:"守る",hint:"pre(前もって) + serv(保つ) ⇒ 保存する"},
+{id:960,en:"prestigious",jp:"名誉ある",hint:"prestige(名声)のある"},
+{id:961,en:"principal",jp:"主要な",hint:"prince(第一の) ⇒ 校長、元金"},
+{id:962,en:"prospect",jp:"可能性",hint:"pro(前へ) + spect(見る) ⇒ 展望"},
+{id:963,en:"reflect",jp:"映す",hint:"re(再び) + flect(曲げる) ⇒ 反射する"},
+{id:964,en:"reform",jp:"改革",hint:"re(再び) + form(形作る) ⇒ 改革"},
+{id:965,en:"reinforce",jp:"強調する",hint:"re(再び) + in(中へ) + force(力) ⇒ 補強する"},
+{id:966,en:"revolution",jp:"革命",hint:"re(再び) + volu(回る) ⇒ 革命"},
+{id:967,en:"trace",jp:"跡をたどる",hint:"tract(引く) ⇒ 跡をたどる"},
+{id:968,en:"undergo",jp:"受ける",hint:"under(下を) + go(行く) ⇒ 経験する"},
+{id:969,en:"undertake",jp:"取り組む",hint:"under(下で) + take(支える) ⇒ 引き受ける"},
+{id:970,en:"utility",jp:"公共料金",hint:"use(使う) + ility(性質) ⇒ 有用性"},
+{id:971,en:"venture",jp:"ベンチャー企業",hint:"ad(〜へ) + venture(冒険) ⇒ 投機的事業"},
+{id:972,en:"prolonged",jp:"長時間にわたる",hint:"pro(前へ) + long(長く) + ed"},
+{id:973,en:"stimulate",jp:"活性化する",hint:"stick(刺す) ⇒ 刺激する"},
+{id:974,en:"accomplish",jp:"なし遂げる",hint:"ac(〜へ) + com(完全に) + plish(満たす)"},
+{id:975,en:"activate",jp:"始動させる",hint:"act(動く)状態にする"},
+{id:976,en:"caution",jp:"注意",hint:"cave(用心する) ⇒ 注意"},
+{id:977,en:"collide",jp:"衝突する",hint:"col(共に) + lide(打つ) ⇒ ぶつかる"},
+{id:978,en:"consecutive",jp:"連続した",hint:"con(共に) + sec(続く) ⇒ 途切れず続く"},
+{id:979,en:"detach",jp:"取り外す",hint:"de(離れて) + tach(杭) ⇒ アタッチ(attach)の逆"},
+{id:980,en:"dilute",jp:"薄める",hint:"di(離れて) + lute(洗う) ⇒ 洗って薄める"},
+{id:981,en:"disrupt",jp:"乱す",hint:"dis(バラバラに) + rupt(壊れる) ⇒ 崩壊・混乱"},
+{id:982,en:"emerge",jp:"明らかになる",hint:"e(外へ) + merge(沈む) ⇒ 水から顔を出す"},
+{id:983,en:"endeavor",jp:"試み",hint:"en(中で) + devoir(義務) ⇒ 努力"},
+{id:984,en:"foresee",jp:"予測する",hint:"fore(前もって) + see(見る)"},
+{id:985,en:"interrupt",jp:"邪魔をする",hint:"inter(間に) + rupt(壊れる) ⇒ 割り込む"},
+{id:986,en:"pursue",jp:"進む",hint:"pur(前に) + sue(追う) ⇒ 追求する"},
+{id:987,en:"resist",jp:"拒否する",hint:"re(対抗して) + sist(立つ) ⇒ 抵抗する"},
+{id:988,en:"enthusiastic",jp:"乗り気になっている",hint:"theos(神)が中に入った ⇒ 熱狂的な"},
+{id:989,en:"incentive",jp:"誘因",hint:"in(中へ) + cent(歌う) ⇒ 励ます歌"},
+{id:990,en:"strive",jp:"努力する",hint:"strife(争い)と同語源 ⇒ 懸命に努力する"},
+];
+// --- END PART 3 ---
+
+const rawData = [
+  ...dataPart1,
+  ...dataPart2,
+  ...dataPart3
+];
+
+// Verify sort order
+rawData.sort((a, b) => a.id - b.id);
+
+// --- APP LOGIC ---
+const STORAGE_KEY = 'toeic_990_ultimate_v9';
+let weakIDs = [], currentQuestions = [], currentIndex = 0, score = 0, isWeakMode = false;
+let maskMode = 'none'; // 'none', 'en', 'jp'
+let isHintHidden = false; // New global state
+
+function init() {
+  loadWeakData();
+  updateWeakUI();
+  setupRangeOptions(); // New function
+  setupScrollBehavior();
+  // Set default search view
+  document.getElementById('range-filter').value = "1-100";
+  applyFilters();
+}
+
+function loadWeakData() {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if(saved) weakIDs = JSON.parse(saved);
+}
+
+function saveWeakData() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(weakIDs));
+  updateWeakUI();
+}
+
+function updateWeakUI() {
+  document.getElementById('weak-count').innerText = weakIDs.length;
+}
+
+// Generate Dropdown Options (100 increments)
+function setupRangeOptions() {
+  const select = document.getElementById('range-filter');
+  select.innerHTML = ""; // Clear existing (or JS generated placeholders)
+  
+  // Add 100-step options
+  const step = 100;
+  for (let i = 0; i < 990; i += step) {
+    let start = i + 1;
+    let end = Math.min(i + step, 990);
+    const opt = document.createElement('option');
+    opt.value = `${start}-${end}`;
+    opt.innerText = `No. ${start} - ${end}`;
+    select.appendChild(opt);
+  }
+  
+  // Add "All" option at the end
+  const allOpt = document.createElement('option');
+  allOpt.value = "all";
+  allOpt.innerText = "全範囲 (1-990)";
+  select.appendChild(allOpt);
+}
+
+// SCROLL BEHAVIOR (iOS Optimized)
+function setupScrollBehavior() {
+  let lastScrollTop = 0;
+  const stickyHeader = document.getElementById('sticky-header');
+  
+  // Throttle function for performance
+  let ticking = false;
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        // Only apply in search screen
+        if(document.getElementById('search-screen').classList.contains('hidden')) {
+          ticking = false;
+          return;
+        }
+
+        let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        // Hide logic (Scroll Down > 10px and not at top)
+        if (scrollTop > lastScrollTop && scrollTop > 60) {
+          stickyHeader.style.transform = 'translateY(-120%)';
+        } else {
+          // Show logic (Scroll Up)
+          stickyHeader.style.transform = 'translateY(0)';
+        }
+        lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+}
+
+// Navigation
+function showScreen(id) {
+  ['home-screen', 'level-screen', 'quiz-screen', 'result-screen', 'list-screen', 'search-screen'].forEach(s => {
+    document.getElementById(s).classList.add('hidden');
+  });
+  document.getElementById(id).classList.remove('hidden');
+  window.scrollTo(0,0);
+}
+
+function goHome() {
+  showScreen('home-screen');
+  updateWeakUI();
+}
+
+// --- AUDIO FUNCTION ---
+function speak(text) {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.9;
+    window.speechSynthesis.speak(utterance);
+  } else {
+    alert("お使いのブラウザは音声再生に対応していません。");
+  }
+}
+
+// --- SEARCH & WORD BOOK FUNCTION ---
+function showSearch() {
+  showScreen('search-screen');
+  document.getElementById('search-input').value = "";
+  // Reset to default 1-100 on open
+  document.getElementById('range-filter').value = "1-100";
+  setMaskMode('none');
+  applyFilters();
+}
+
+function setMaskMode(mode) {
+  maskMode = mode;
+  document.querySelectorAll('.mask-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`mask-${mode}`).classList.add('active');
+  applyFilters();
+}
+
+function toggleListHints() {
+  isHintHidden = !isHintHidden;
+  const btn = document.getElementById('hint-toggle');
+  if(isHintHidden) {
+    btn.classList.add('active');
+  } else {
+    btn.classList.remove('active');
+  }
+  applyFilters();
+}
+
+function applyFilters() {
+  const rangeVal = document.getElementById('range-filter').value;
+  const searchVal = document.getElementById('search-input').value.toLowerCase().trim();
+  
+  let list = rawData;
+
+  // 1. Filter by Range
+  if(rangeVal !== 'all') {
+    const [start, end] = rangeVal.split('-').map(Number);
+    list = list.filter(d => d.id >= start && d.id <= end);
+  }
+
+  // 2. Filter by Search Text
+  if(searchVal) {
+    list = list.filter(d => 
+      d.en.toLowerCase().includes(searchVal) || d.jp.includes(searchVal)
+    );
+  }
+
+  renderSearchResults(list);
+}
+
+function renderSearchResults(list) {
+  const con = document.getElementById('search-results');
+  con.innerHTML = "";
+  if(list.length === 0) {
+    con.innerHTML = "<div style='padding:40px; text-align:center; color:#94a3b8;'>見つかりません</div>";
+    return;
+  }
+
+  list.forEach(d => {
+    const div = document.createElement('div');
+    div.className = 'list-item';
+    
+    const enClass = maskMode === 'en' ? 'masked' : '';
+    const jpClass = maskMode === 'jp' ? 'masked' : '';
+    const hintClass = isHintHidden ? 'hidden' : '';
+
+    div.innerHTML = `
+      <span class="list-id-top">No.${d.id}</span>
+      <div class="list-top">
+        <span class="list-en ${enClass}" onclick="toggleReveal(this)">${d.en}</span>
+        <button class="audio-btn" onclick="speak('${d.en}')">🔊</button>
+      </div>
+      <div class="list-jp ${jpClass}" onclick="toggleReveal(this)">${d.jp}</div>
+      
+      <div class="hint-row">
+        <div class="list-hint ${hintClass}">${d.hint}</div>
+        <button class="weak-add-btn" onclick="addToWeak(${d.id}); alert('追加しました')">+ 苦手へ</button>
+      </div>
+    `;
+    con.appendChild(div);
+  });
+}
+
+function toggleReveal(el) {
+  if (el.classList.contains('masked')) {
+    el.classList.toggle('revealed');
+  }
+}
+
+// --- QUIZ LOGIC ---
+function showLevels(count) {
+  const container = document.getElementById('level-list');
+  container.innerHTML = "";
+  
+  // Create 50-step buttons
+  const step = 50;
+  for (let i = 0; i < 990; i += step) {
+    let start = i;
+    let end = Math.min(i + step, 990);
+    if (start >= end) continue;
+
+    const label = `${start + 1} - ${end}`;
+    const btn = document.createElement('div');
+    btn.className = 'menu-btn';
+    btn.innerHTML = `<span class="menu-title">${label}</span>`;
+    btn.onclick = () => startQuiz(start, end, count);
+    container.appendChild(btn);
+  }
+  
+  showScreen('level-screen');
+}
+
+function startRandom() {
+  startQuiz(0, 990, 50);
+}
+
+function startWeakMode() {
+  if(!weakIDs.length) return alert("苦手単語はありません！");
+  isWeakMode = true;
+  let pool = rawData.filter(d => weakIDs.includes(d.id));
+  pool.sort(() => Math.random() - 0.5);
+  currentQuestions = pool;
+  startQuizSequence();
+}
+
+function startQuiz(start, end, count) {
+  isWeakMode = false;
+  let pool = rawData.slice(start, end);
+  pool.sort(() => Math.random() - 0.5);
+  currentQuestions = pool.slice(0, count);
+  startQuizSequence();
+}
+
+function startQuizSequence() {
+  currentIndex = 0;
+  score = 0;
+  showScreen('quiz-screen');
+  showQuestion();
+}
+
+function showQuestion() {
+  const q = currentQuestions[currentIndex];
+  document.getElementById('progress').innerText = `${currentIndex + 1} / ${currentQuestions.length}`;
+  document.getElementById('q-id').innerText = `No.${q.id}`;
+  document.getElementById('q-text').innerText = q.en;
+  
+  // Hint reset
+  document.getElementById('hint-content').style.display = 'none';
+  document.getElementById('hint-content').innerText = q.hint;
+  document.getElementById('hint-btn').style.display = 'inline-block';
+
+  // Feedback reset
+  document.getElementById('feedback').style.display = 'none';
+  document.getElementById('options').innerHTML = "";
+  
+  // Options
+  let distractors = rawData.filter(d => d.id !== q.id);
+  distractors.sort(() => Math.random() - 0.5);
+  let opts = distractors.slice(0, 3);
+  opts.push(q);
+  opts.sort(() => Math.random() - 0.5);
+
+  const optContainer = document.getElementById('options');
+  opts.forEach(o => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerText = o.jp;
+    btn.onclick = () => checkAnswer(o, q);
+    optContainer.appendChild(btn);
+  });
+}
+
+function speakCurrentQ() {
+  const q = currentQuestions[currentIndex];
+  speak(q.en);
+}
+
+function toggleHint() {
+  const h = document.getElementById('hint-content');
+  h.style.display = 'block';
+  document.getElementById('hint-btn').style.display = 'none';
+}
+
+function checkAnswer(selected, correct) {
+  const opts = document.getElementById('options').children;
+  for(let btn of opts) {
+    btn.disabled = true;
+    if(btn.innerText === correct.jp) btn.classList.add('correct');
+    if(btn.innerText === selected.jp && selected.id !== correct.id) btn.classList.add('wrong');
+  }
+
+  const fb = document.getElementById('feedback');
+  const fbMsg = document.getElementById('fb-msg');
+  
+  if(selected.id === correct.id) {
+    score++;
+    fbMsg.innerText = "正解! 🎉";
+    fbMsg.style.color = "var(--correct)";
+    if(isWeakMode) removeFromWeak(correct.id); 
+  } else {
+    fbMsg.innerText = "不正解... 😢";
+    fbMsg.style.color = "var(--wrong)";
+    addToWeak(correct.id);
+  }
+
+  document.getElementById('fb-correct').innerText = `${correct.en} : ${correct.jp}`;
+  document.getElementById('fb-hint').innerText = correct.hint;
+  fb.style.display = 'block';
+}
+
+function nextQ() {
+  currentIndex++;
+  if(currentIndex < currentQuestions.length) {
+    showQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function showResult() {
+  showScreen('result-screen');
+  document.getElementById('final-score').innerText = `${score} / ${currentQuestions.length}`;
+  
+  let rate = score / currentQuestions.length;
+  let txt = "";
+  if(rate === 1) txt = "Perfect!! 素晴らしい！🏆";
+  else if(rate >= 0.8) txt = "Great Job! その調子！✨";
+  else txt = "復習して、苦手をなくしましょう！💪";
+  
+  document.getElementById('result-msg').innerText = txt;
+  document.getElementById('weak-msg').innerText = isWeakMode ? `今回、苦手リストから正解した単語はリストから外しました！` : "";
+}
+
+// Weak List Management
+function addToWeak(id) {
+  if(!weakIDs.includes(id)) {
+    weakIDs.push(id);
+    weakIDs.sort((a,b)=>a-b);
+    saveWeakData();
+  }
+}
+
+function removeFromWeak(id) {
+  weakIDs = weakIDs.filter(w => w !== id);
+  saveWeakData();
+}
+
+function showList(type) {
+  if(!weakIDs.length) return alert("現在、苦手単語はありません。");
+  showScreen('list-screen');
+  const con = document.getElementById('list-content');
+  con.innerHTML = "";
+  
+  const list = rawData.filter(d => weakIDs.includes(d.id));
+  list.forEach(d => {
+    const div = document.createElement('div');
+    div.className = 'list-item';
+    div.innerHTML = `
+      <span class="list-id-top">No.${d.id}</span>
+      <div class="list-top">
+        <span class="list-en" style="color:var(--wrong);">${d.en}</span>
+        <button class="audio-btn" onclick="speak('${d.en}')">🔊</button>
+      </div>
+      <div class="list-jp">${d.jp}</div>
+      <div class="hint-row">
+        <div class="list-hint">${d.hint}</div>
+        <button class="weak-add-btn" style="color:var(--correct); background:#E8FAEA;" onclick="removeFromWeak(${d.id}); showList('weak');">✔ 克服！(削除)</button>
+      </div>
+    `;
+    con.appendChild(div);
+  });
+}
+
+// Init
+window.onload = init;
+</script>
+</body>
+</html>
