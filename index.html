@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>TOEIC単語990　単語帳＆テスト</title>
+<title>TOEIC単語990</title>
 <style>
+  /* 基本スタイル */
   :root {
-    --primary: #007AFF; /* iOS Blue */
+    --primary: #007AFF;
     --primary-bg: #F2F2F7;
     --accent: #FF9500;
     --bg: #FFFFFF;
@@ -47,353 +50,190 @@
   .content-padding {
     padding: 20px 20px calc(80px + var(--safe-bottom)) 20px;
   }
+  
+  /* クイズ画面の下部余白を個別に縮小 */
+  #quiz-screen.content-padding {
+    padding-bottom: calc(20px + var(--safe-bottom)) !important;
+  }
 
-  /* タイトルエリア */
+  /* --- HEADER --- */
   .home-header {
     padding-top: calc(20px + var(--safe-top));
     padding-bottom: 20px;
     background: var(--bg);
     text-align: center;
   }
+  h1 { font-size: 28px; margin: 0; font-weight: 800; letter-spacing: -0.5px; }
+  .subtitle { color: var(--text-sub); font-size: 13px; margin-top: 5px; font-weight: 500; }
 
-  h1 {
-    font-size: 28px;
-    margin: 0;
-    font-weight: 800;
-    color: var(--text-main);
-    letter-spacing: -0.5px;
-  }
-  .subtitle {
-    color: var(--text-sub);
-    font-size: 13px;
-    margin-top: 5px;
-    font-weight: 500;
-  }
-
-  /* メニューグリッド */
-  .menu-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-top: 10px;
-  }
-  
+  /* --- MENU --- */
+  .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
   .menu-btn {
-    background: #ffffff;
-    border: none;
-    padding: 20px 15px;
-    border-radius: 18px;
-    text-align: center;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    transition: transform 0.1s;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
+    background: #ffffff; border: none; padding: 20px 15px; border-radius: 18px; text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.1s; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;
   }
   .menu-btn:active { transform: scale(0.96); background: #f2f2f7; }
   
-  .menu-btn.large {
+  .menu-btn.large { 
+    grid-column: span 2; 
+    background: #E5F1FF; 
+    flex-direction: row; 
+    justify-content: space-between;
+    text-align: left; 
+    padding: 25px 35px;
+  }
+  
+  .menu-btn.bulk {
     grid-column: span 2;
-    background: #E5F1FF;
+    background: #FFF0F5; 
     flex-direction: row;
     justify-content: space-between;
     text-align: left;
-    padding: 25px 20px;
+    padding: 25px 35px;
+    color: #D63384;
   }
+  
+  .menu-title { display: block; font-weight: 700; font-size: 17px; color: var(--primary); margin-bottom: 4px; }
+  .menu-btn.bulk .menu-title { color: #D63384; }
 
-  .menu-title {
-    display: block;
-    font-weight: 700;
-    font-size: 17px;
-    color: var(--primary);
-    margin-bottom: 4px;
-  }
   .menu-desc { font-size: 12px; color: var(--text-sub); line-height: 1.3; }
 
-  /* 苦手ボックス */
-  .weak-box {
-    background: #FFF5F5;
-    padding: 20px;
-    border-radius: 18px;
-    text-align: center;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 10px rgba(255, 59, 48, 0.05);
-  }
-  .weak-count {
-    font-size: 48px;
-    font-weight: 800;
-    color: var(--wrong);
-    display: block;
-    line-height: 1;
-    margin: 5px 0 15px 0;
-  }
+  /* --- WEAK BOX --- */
+  .weak-box { background: #FFF5F5; padding: 20px; border-radius: 18px; text-align: center; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(255, 59, 48, 0.05); }
+  .weak-count { font-size: 48px; font-weight: 800; color: var(--wrong); display: block; line-height: 1; margin: 5px 0 15px 0; }
   .weak-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-  /* 共通ボタン */
-  .btn-action {
-    background: var(--primary);
-    color: white;
-    border: none;
-    font-weight: 600;
-    padding: 14px;
-    border-radius: 14px;
-    font-size: 16px;
-    width: 100%;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0, 122, 255, 0.2);
-  }
+  .btn-action { background: var(--primary); color: white; border: none; font-weight: 600; padding: 14px; border-radius: 14px; font-size: 16px; width: 100%; cursor: pointer; box-shadow: 0 4px 10px rgba(0, 122, 255, 0.2); }
   .btn-action:active { opacity: 0.8; transform: translateY(1px); }
   .btn-action.secondary { background: var(--text-sub); box-shadow: none; }
   .btn-action.danger { background: var(--accent); box-shadow: 0 4px 10px rgba(255, 149, 0, 0.2); }
 
   /* --- STICKY HEADER & SEARCH --- */
   .sticky-wrapper {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    width: 100%;
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    background: rgba(255,255,255,0.92);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 0.5px solid rgba(0,0,0,0.1);
-    box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    position: sticky; top: 0; z-index: 100; width: 100%;
+    background: #FFFFFF; border-bottom: 0.5px solid rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03); transition: transform 0.2s ease-out;
   }
-  
   .header-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: calc(10px + var(--safe-top)) 15px 10px 15px;
-    height: calc(54px + var(--safe-top));
+    display: flex; justify-content: space-between; align-items: center;
+    padding: calc(10px + var(--safe-top)) 15px 10px 15px; height: calc(54px + var(--safe-top));
   }
-  
-  .back-btn {
-    font-size: 17px;
-    color: var(--primary);
-    background: none;
-    border: none;
-    padding: 10px 5px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
+  .back-btn { font-size: 17px; color: var(--primary); background: none; border: none; padding: 10px 5px; cursor: pointer; display: flex; align-items: center; gap: 5px; }
   .header-title { font-weight: 600; font-size: 17px; }
 
-  .search-area {
-    padding: 0 15px 15px 15px;
-  }
-
-  .input-wrapper {
-    background: #E3E3E8;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    padding: 0 10px;
-    margin-bottom: 10px;
-  }
+  .search-area { padding: 0 15px 12px 15px; }
+  .input-wrapper { background: #E3E3E8; border-radius: 10px; display: flex; align-items: center; padding: 0 10px; margin-bottom: 10px; }
   .search-icon { color: #8E8E93; font-size: 16px; margin-right: 5px; }
-  
-  .search-input {
-    width: 100%;
-    padding: 10px 5px;
-    border: none;
-    background: transparent;
-    font-size: 16px;
-    outline: none;
-    height: 44px;
-  }
-  
-  select.search-input {
-    appearance: none;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23007AFF'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 0px center;
-    background-size: 24px;
-  }
+  .search-input { width: 100%; padding: 10px 5px; border: none; background: transparent; font-size: 16px; outline: none; height: 44px; }
+  select.search-input { appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23007AFF'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 0px center; background-size: 24px; }
 
-  .mask-controls {
-    display: flex;
-    gap: 8px;
-    overflow-x: auto;
-    padding-bottom: 2px;
-    scrollbar-width: none;
-  }
+  .mask-controls { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
   .mask-controls::-webkit-scrollbar { display: none; }
+  .mask-btn { flex: 1; white-space: nowrap; padding: 8px 12px; font-size: 13px; font-weight: 600; border-radius: 16px; background: #F2F2F7; color: var(--text-main); border: none; transition: 0.2s; min-height: 36px; }
+  .mask-btn.active { background: var(--text-main); color: white; }
+  .mask-btn.hint-toggle-btn.active { background: var(--accent); color: white; }
 
-  .mask-btn {
-    flex: 1;
-    white-space: nowrap;
-    padding: 8px 12px;
-    font-size: 13px;
-    font-weight: 600;
-    border-radius: 16px;
-    background: #F2F2F7;
-    color: var(--text-main);
-    border: none;
-    transition: 0.2s;
-    min-height: 36px;
-  }
-  .mask-btn.active {
-    background: var(--text-main);
-    color: white;
-  }
-  .mask-btn.hint-toggle-btn.active {
-    background: var(--accent);
-    color: white;
-  }
-
-  /* リスト表示 */
-  .list-container {
-    padding: 0 20px;
-  }
-  .list-item {
-    padding: 16px 0;
-    border-bottom: 0.5px solid rgba(0,0,0,0.1);
-  }
-  
-  .list-id-top {
-    font-size: 11px;
-    color: var(--text-sub);
-    font-weight: 600;
-    margin-bottom: 4px;
-    display: block;
-    letter-spacing: 0.5px;
-  }
-
-  .list-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 4px;
-  }
-  
-  .list-en {
-    font-size: 19px;
-    font-weight: 700;
-    color: var(--text-main);
-    letter-spacing: -0.3px;
-  }
-  
-  .audio-btn {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: #E5F1FF;
-    color: var(--primary);
-    border: none;
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    margin-left: 10px;
-  }
+  /* --- LIST ITEMS --- */
+  .list-container { padding: 0 20px; }
+  .list-item { padding: 16px 0; border-bottom: 0.5px solid rgba(0,0,0,0.1); }
+  .list-id-top { font-size: 11px; color: var(--text-sub); font-weight: 600; margin-bottom: 4px; display: block; letter-spacing: 0.5px; }
+  .list-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+  .list-en { font-size: 22px; font-weight: 700; color: var(--text-main); letter-spacing: -0.3px; }
+  .audio-btn { width: 44px; height: 44px; border-radius: 50%; background: #E5F1FF; color: var(--primary); border: none; font-size: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer; margin-left: 10px; flex-shrink: 0; }
   .audio-btn:active { transform: scale(0.9); background: #d1e3fa; }
-
-  .list-jp {
-    font-size: 15px;
-    color: #3A3A3C;
-    line-height: 1.5;
-    margin-top: 4px;
-  }
-  
-  /* Hint & Button Wrapper */
-  .hint-row {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    margin-top: 8px;
-    gap: 10px;
-  }
-
-  .list-hint {
-    font-size: 13px;
-    color: #856404;
-    background: #FFF3CD;
-    padding: 8px 12px;
-    border-radius: 8px;
-    line-height: 1.4;
-    flex: 1; /* Take remaining space */
-  }
+  .list-jp { font-size: 15px; color: #3A3A3C; line-height: 1.5; margin-top: 4px; }
+  .hint-row { display: flex; align-items: flex-start; justify-content: space-between; margin-top: 8px; gap: 10px; }
+  .list-hint { font-size: 13px; color: #856404; background: #FFF3CD; padding: 8px 12px; border-radius: 8px; line-height: 1.4; flex: 1; }
   .list-hint.hidden { display: none; }
 
-  /* マスク機能 */
-  .masked {
-    background-color: #E5E5EA;
-    color: transparent !important;
-    border-radius: 6px;
-    user-select: none;
+  .weak-toggle-btn {
+    padding: 8px 12px; font-size: 12px; font-weight: 600;
+    border: none; border-radius: 8px; display: inline-flex; align-items: center;
+    white-space: nowrap; height: 34px; margin-left: auto; transition: 0.2s; flex-shrink: 0;
   }
-  .masked.revealed {
-    background-color: transparent;
-    color: inherit !important;
-  }
+  .is-weak { background: #E8FAEA; color: #1D8536; border: 1px solid #C3E6CB; }
+  .is-not-weak { background: #FFF0F0; color: #FF3B30; border: 1px solid #FFD1D1; }
 
-  .weak-add-btn {
-    padding: 8px 12px;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--wrong);
-    background: #FFF0F0;
-    border: none;
-    border-radius: 8px;
-    display: inline-flex;
-    align-items: center;
-    white-space: nowrap; /* 折り返し防止 */
-    height: 34px; /* 高さ合わせ */
-    margin-left: auto; /* 右寄せ */
-  }
-
-  /* クイズ画面 */
-  .quiz-card {
-    text-align: center;
-    margin-top: 20px;
-  }
-  .word-display {
-    padding: 40px 0;
-  }
-  .word-text {
-    font-size: 42px;
-    font-weight: 800;
-    line-height: 1.1;
-    margin-bottom: 10px;
-    color: var(--text-main);
-  }
-  .word-id {
-    font-size: 13px;
-    color: var(--text-sub);
-    font-weight: 600;
-    display: block;
-    margin-bottom: 10px;
-  }
+  /* --- QUIZ LAYOUT --- */
+  .quiz-container { padding-top: 5px; }
+  .quiz-card { text-align: center; margin-top: 0; }
   
-  .option-btn {
-    display: block;
-    width: 100%;
-    padding: 18px;
-    margin-bottom: 12px;
-    background: #ffffff;
-    border: 1px solid #E5E5EA;
-    border-radius: 16px;
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--text-main);
-    text-align: left;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
-    transition: 0.1s;
+  .word-display { padding: 10px 0 20px 0; }
+  
+  .word-id { font-size: 13px; color: var(--text-sub); font-weight: 600; display: block; margin-bottom: 2px; }
+  
+  .word-text { font-size: 40px; font-weight: 800; line-height: 1.1; margin-bottom: 0; color: var(--text-main); }
+  
+  .hint-zone { text-align:center; margin-bottom:15px; min-height:40px; }
+  
+  .option-btn { 
+    display: flex; 
+    justify-content: space-between;
+    align-items: center;
+    width: 100%; 
+    padding: 18px; 
+    margin-bottom: 12px; 
+    background: #ffffff; 
+    border: 1px solid #E5E5EA; 
+    border-radius: 16px; 
+    font-size: 16px; 
+    font-weight: 600; 
+    color: var(--text-main); 
+    text-align: left; 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.03); 
+    transition: 0.1s; 
   }
   .option-btn:active { background: #f2f2f7; transform: scale(0.98); }
   .option-btn.correct { background: #E8FAEB; border-color: var(--correct); color: #1D8536; }
   .option-btn.wrong { background: #FFEBEA; border-color: var(--wrong); color: #C41C10; }
+  .option-btn:disabled { opacity: 1.0; pointer-events: none; }
 
+  /* Result List Layout */
+  .result-list { margin-top: 20px; text-align: center; border-top: 1px solid #E5E5EA; }
+  .result-item { 
+    padding: 15px 30px; 
+    border-bottom: 1px solid #E5E5EA; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+  }
+  .ri-en { font-weight: 800; color: var(--wrong); font-size: 20px; letter-spacing: -0.5px; }
+  .ri-jp { font-size: 16px; color: var(--text-main); flex: 1; text-align: right; margin-left: 20px;}
+
+  /* MODAL */
+  .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 1000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+  .modal-box { background: white; padding: 24px; border-radius: 20px; width: 85%; max-width: 340px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1); animation: popIn 0.2s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; max-height: 80vh; }
+  
+  .modal-box.closing { animation: popOut 0.2s forwards; }
+
+  .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 15px; color: var(--text-main); flex-shrink: 0; }
+  .modal-desc { font-size: 14px; color: var(--text-sub); margin-bottom: 20px; line-height: 1.5; }
+  .modal-btns { display: flex; gap: 10px; margin-top: 10px; }
+  .modal-btn { flex: 1; padding: 12px; border-radius: 12px; font-weight: 600; border: none; font-size: 15px; cursor: pointer; }
+  .mb-primary { background: var(--primary); color: white; }
+  .mb-sub { background: #E5E5EA; color: var(--text-main); }
+
+  /* Course Grid in Modal */
+  .course-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+    overflow-y: auto; padding: 5px; 
+    margin-bottom: 10px;
+  }
+  .course-btn {
+    padding: 15px 5px; background: #F2F2F7; border-radius: 12px; border:none;
+    text-align: center; font-weight: 600; color: var(--primary); font-size: 14px; cursor: pointer;
+    transition: 0.1s;
+  }
+  .course-btn:active { background: #E5E5EA; transform: scale(0.98); }
+
+  .masked { background-color: #E5E5EA; color: transparent !important; border-radius: 6px; user-select: none; }
+  .masked.revealed { background-color: transparent; color: inherit !important; }
   .hidden { display: none !important; }
   .safe-area-spacer { height: calc(20px + var(--safe-bottom)); }
 
+  @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+  @keyframes popOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.9); } }
 </style>
 </head>
 <body>
@@ -411,7 +251,7 @@
       <span class="weak-count" id="weak-count">0</span>
       <div class="weak-actions">
         <button class="btn-action danger" onclick="startWeakMode()">🔥 苦手特訓</button>
-        <button class="btn-action secondary" onclick="showList('weak')">📖 リスト</button>
+        <button class="btn-action secondary" onclick="showList()">📖 リスト</button>
       </div>
     </div>
 
@@ -423,6 +263,15 @@
         </div>
         <span style="font-size:30px;">🔍</span>
       </div>
+      
+      <div class="menu-btn bulk" onclick="startBulkTest(50)">
+        <div>
+          <span class="menu-title">📝 50問一括テスト</span>
+          <span class="menu-desc">野々村の定期試験対策に</span>
+        </div>
+        <span style="font-size:30px;">💯</span>
+      </div>
+
       <div class="menu-btn" onclick="showLevels(10)">
         <span style="font-size:24px; margin-bottom:5px;">⚡️</span>
         <span class="menu-title">10問</span>
@@ -433,8 +282,15 @@
         <span class="menu-title">50問</span>
         <span class="menu-desc">じっくり</span>
       </div>
-      <div class="menu-btn" onclick="startRandom()" style="grid-column: span 2;">
-        <span class="menu-title">🎲 全990語からランダムテスト</span>
+      <div class="menu-btn" onclick="showConfusingOptions()">
+        <span style="font-size:24px; margin-bottom:5px;">🌀</span>
+        <span class="menu-title">似ている単語</span>
+        <span class="menu-desc">con-, ex- 等</span>
+      </div>
+      <div class="menu-btn" onclick="showRandomModes()">
+	<span style="font-size:24px; margin-bottom:5px;">🎲</span>
+	<span class="menu-title">ランダム</span>
+	<span class="menu-desc">990単語から</span>
       </div>
     </div>
   </div>
@@ -461,9 +317,8 @@
         </div>
         
         <div class="mask-controls">
-          <button class="mask-btn active" id="mask-none" onclick="setMaskMode('none')">全表示</button>
-          <button class="mask-btn" id="mask-en" onclick="setMaskMode('en')">英語隠す</button>
-          <button class="mask-btn" id="mask-jp" onclick="setMaskMode('jp')">意味隠す</button>
+          <button class="mask-btn" id="mask-en" onclick="toggleMask('en')">英語隠す</button>
+          <button class="mask-btn" id="mask-jp" onclick="toggleMask('jp')">意味隠す</button>
           <button class="mask-btn hint-toggle-btn" id="hint-toggle" onclick="toggleListHints()">💡ヒント</button>
         </div>
       </div>
@@ -474,18 +329,7 @@
     <div class="safe-area-spacer"></div>
   </div>
 
-  <div id="level-screen" class="hidden content-padding">
-    <div class="home-header">
-      <button class="back-btn" onclick="goHome()" style="justify-content: center;">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-        戻る
-      </button>
-      <h2>コース選択</h2>
-    </div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:20px;" id="level-list"></div>
-  </div>
-
-  <div id="quiz-screen" class="hidden content-padding">
+  <div id="quiz-screen" class="hidden content-padding quiz-container">
     <div class="home-header" style="display:flex; justify-content:space-between; padding-bottom:10px;">
       <button class="back-btn" onclick="goHome()">中断</button>
       <span style="font-weight:bold; color:var(--text-sub);" id="progress">1 / 10</span>
@@ -496,11 +340,11 @@
       <span class="word-id" id="q-id">No.001</span>
       <div class="word-display">
         <div class="word-text" id="q-text">word</div>
-        <button class="audio-btn" onclick="speakCurrentQ()" style="margin:0 auto; width:50px; height:50px; font-size:24px;">🔊</button>
+        <button class="audio-btn" onclick="speakCurrentQ()" style="margin:20px auto 0; width:50px; height:50px; font-size:24px;">🔊</button>
       </div>
     </div>
 
-    <div style="text-align:center; margin-bottom:20px; min-height:40px;">
+    <div class="hint-zone">
       <button id="hint-btn" onclick="toggleHint()" style="background:none; border:none; color:var(--accent); font-weight:bold; cursor:pointer; font-size:15px;">
         💡 ヒントを見る
       </button>
@@ -516,20 +360,49 @@
         <div id="fb-correct" style="font-size:16px; font-weight:bold; color:var(--text-main);"></div>
         <div id="fb-hint" style="font-size:14px; color:var(--text-main); margin-top:8px;"></div>
       </div>
-      <button class="btn-action" onclick="nextQ()">次へ進む ➔</button>
+      
+      <button class="btn-action" onclick="nextQ()" style="width:100%;">次へ ➔</button>
     </div>
+
+    <div style="margin-top: 20px; text-align: left; padding-bottom: 0;">
+      <button id="prev-btn" class="btn-action secondary" onclick="prevQ()" style="display:none; width: auto; padding: 10px 20px;">
+        ← 前へ
+      </button>
+    </div>
+  </div>
+
+  <div id="bulk-test-screen" class="hidden content-padding">
+    <div class="home-header">
+      <button class="back-btn" onclick="goHome()">ホームへ</button>
+      <h1>50問一括テスト</h1>
+      <div id="bulk-score-area" style="display:none; margin-top:10px;">
+         <div style="font-size:60px; font-weight:900; color:var(--primary); line-height:1;" id="bulk-score-val">0 / 50</div>
+         <div style="font-weight:bold; margin-top:5px; color:var(--text-sub);" id="bulk-score-msg"></div>
+      </div>
+      <p class="subtitle" id="bulk-subtitle">全問回答後に採点します</p>
+    </div>
+    <div id="bulk-test-list" style="padding-bottom: 40px;"></div>
+    <button id="bulk-grade-btn" class="btn-action" onclick="finishBulkTest()" style="margin-top:10px; margin-bottom:50px;">採点する</button>
+    <button id="bulk-home-btn" class="btn-action secondary" onclick="goHome()" style="margin-top:10px; margin-bottom:50px; display:none;">ホームに戻る</button>
   </div>
 
   <div id="result-screen" class="hidden content-padding" style="text-align:center; padding-top:60px;">
     <h2 style="color:var(--text-sub); margin-bottom:10px;">RESULT</h2>
     <div style="font-size:80px; font-weight:900; color:var(--primary); line-height:1; margin:20px 0;" id="final-score">10</div>
-    <p id="result-msg" style="color:var(--text-main); font-size:18px; font-weight:bold; margin-bottom:40px;"></p>
-    <div id="weak-msg" style="color:var(--accent); font-weight:bold; background:#FFF5F5; padding:20px; border-radius:14px; margin-bottom:40px; font-size:14px;"></div>
+    <p id="result-msg" style="color:var(--text-main); font-size:18px; font-weight:bold; margin-bottom:30px;"></p>
+    
+    <div id="weak-msg" style="color:var(--accent); font-weight:bold; background:#FFF5F5; padding:20px; border-radius:14px; margin-bottom:20px; font-size:14px;"></div>
+
+    <div id="wrong-container" style="display:none; margin-bottom:30px;">
+      <div style="font-weight:bold; color:var(--wrong); text-align:left; margin-bottom:5px;">間違えた単語</div>
+      <div class="result-list" id="wrong-list"></div>
+    </div>
+
     <button class="btn-action" onclick="goHome()">ホームに戻る</button>
   </div>
 
   <div id="list-screen" class="hidden">
-    <div class="sticky-wrapper">
+    <div class="sticky-wrapper" id="sticky-header-list">
       <div class="header-nav">
         <button class="back-btn" onclick="goHome()">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
@@ -538,13 +411,53 @@
         <span class="header-title">苦手リスト</span>
         <div style="width:60px;"></div>
       </div>
+
+      <div class="search-area">
+        <div class="input-wrapper">
+          <select id="weak-sort-filter" class="search-input" onchange="applyWeakFilters()">
+            <option value="latest">登録順（最新が上）</option>
+            <option value="id">No. 順</option>
+          </select>
+        </div>
+        
+        <div class="mask-controls">
+          <button class="mask-btn" id="mask-en-weak" onclick="toggleMaskWeak('en')">英語隠す</button>
+          <button class="mask-btn" id="mask-jp-weak" onclick="toggleMaskWeak('jp')">意味隠す</button>
+          <button class="mask-btn hint-toggle-btn" id="hint-toggle-weak" onclick="toggleListHintsWeak()">💡ヒント</button>
+        </div>
+      </div>
     </div>
     <div class="list-container" id="list-content" style="padding-top:20px;"></div>
     <div class="safe-area-spacer"></div>
   </div>
+
+  <div id="resume-modal" class="hidden modal-overlay">
+    <div class="modal-box">
+      <div class="modal-title">前回の続きがあります</div>
+      <div class="modal-desc">中断したクイズを再開しますか？<br>それとも最初から始めますか？</div>
+      <div class="modal-btns">
+        <button class="modal-btn mb-sub" onclick="cancelResume()">最初から</button>
+        <button class="modal-btn mb-primary" onclick="confirmResume()">続きから</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="course-modal" class="hidden modal-overlay" onclick="closeCourseModal(event)">
+    <div class="modal-box" onclick="event.stopPropagation()">
+      <div class="modal-title" id="course-modal-title">コース選択</div>
+      <div id="course-list" class="course-grid">
+        </div>
+      <button class="btn-action secondary" onclick="closeCourseModal()" style="margin-top:10px;">閉じる</button>
+    </div>
+  </div>
+
 </div>
 
 <script>
+// =========================================================
+// ▼▼▼ 注意：ここに元の単語データを貼り付けてください ▼▼▼
+// =========================================================
+
 // --- DATA PART 1 (1-250) ---
 const dataPart1 = [
 {id:1,en:"product",jp:"製品",hint:"pro(前へ) + duct(導く) ⇒ 生み出されたもの"},
@@ -567,7 +480,7 @@ const dataPart1 = [
 {id:18,en:"park",jp:"駐車する",hint:"公園(park)のような囲い ⇒ 車を留める"},
 {id:19,en:"expect",jp:"待つ・期待する",hint:"ex(外を) + pect(見る) ⇒ 首を長くして待つ"},
 {id:20,en:"order",jp:"注文",hint:"順序(order)正しく並べる ⇒ 秩序・命令・注文"},
-{id:21,en:"busy",jp:"込んでいる",hint:"店が忙しい ＝ 客で混んでいる"},
+{id:21,en:"busy",jp:"混んでいる",hint:"店が忙しい ＝ 客で混んでいる"},
 {id:22,en:"contact",jp:"連絡する",hint:"con(共に) + tact(触れる) ⇒ 接触する"},
 {id:23,en:"leave",jp:"辞める・出発する",hint:"その場を離れる ⇒ 去る・残す"},
 {id:24,en:"board",jp:"乗り込む",hint:"甲板(board)に上がる ⇒ 搭乗する"},
@@ -707,7 +620,7 @@ const dataPart1 = [
 {id:158,en:"take place",jp:"行われる",hint:"場所(place)を占める(take) ⇒ 開催される"},
 {id:159,en:"call off",jp:"中止する",hint:"大声で(call)離れる(off)よう言う"},
 {id:160,en:"according to",jp:"〜によると",hint:"accord(一致) + to ⇒ 〜に合わせて"},
-{id:161,en:"operates",jp:"運営する",hint:"opus(仕事)をする ⇒ 運営・操作する"},
+{id:161,en:"operate",jp:"運営する",hint:"opus(仕事)をする ⇒ 運営・操作する"},
 {id:162,en:"post",jp:"掲示する",hint:"ポスト(柱)に貼る"},
 {id:163,en:"present",jp:"見せる",hint:"プレゼント(目の前にある) ⇒ 提示する"},
 {id:164,en:"reason",jp:"理由",hint:"リーズナブル(理にかなった)の元"},
@@ -798,7 +711,7 @@ const dataPart1 = [
 {id:249,en:"press",jp:"押す",hint:"圧力をかける"},
 {id:250,en:"regular",jp:"定期的な",hint:"reg(定規)で測ったような ⇒ 規則正しい"},
 ];
-// --- END PART 1 ---
+// --- END PART 2 ---
 // --- DATA PART 2 (251-600) ---
 const dataPart2 = [
 {id:251,en:"seem",jp:"〜のように見える",hint:"seem to be"},
@@ -980,7 +893,7 @@ const dataPart2 = [
 {id:427,en:"economical",jp:"経済的な",hint:"eco(家) + nomy(管理) ⇒ 節約"},
 {id:428,en:"exchange",jp:"交換する",hint:"ex(外へ) + change(変える) ⇒ 交換"},
 {id:429,en:"expert",jp:"専門的",hint:"ex(外で) + per(試す) ⇒ 経験豊富な人"},
-{id:430,en:"extention",jp:"内線",hint:"ex(外へ) + tend(伸ばす) ⇒ 電話線を伸ばしたもの"},
+{id:430,en:"extension",jp:"内線",hint:"ex(外へ) + tend(伸ばす) ⇒ 電話線を伸ばしたもの"},
 {id:431,en:"familiar",jp:"よく知っている",hint:"family(家族)のように親しい"},
 {id:432,en:"host",jp:"主催する",hint:"guest(客)をもてなす主人"},
 {id:433,en:"ride",jp:"車に乗せること",hint:"馬に乗る(ride) ⇒ 車に乗る"},
@@ -999,7 +912,7 @@ const dataPart2 = [
 {id:446,en:"update",jp:"更新する",hint:"up(最新) + date(日付)にする"},
 {id:447,en:"upstairs",jp:"上の階に",hint:"up(上へ) + stairs(階段)"},
 {id:448,en:"manner",jp:"態度",hint:"man(手)での扱い方 ⇒ 態度・作法"},
-{id:449,en:"consider",jp:"考える",hint:"con(よく) + sider(星を見る) ⇒ 熟考する"},
+{id:449,en:"consider",jp:"考える",hint:"con(よく) + sider(星を見る) ⇒熟考する"},
 {id:450,en:"executive",jp:"重役",hint:"execute(実行する)権限を持つ人"},
 {id:451,en:"means",jp:"手段",hint:"meaning(意味)とは別語"},
 {id:452,en:"regarding",jp:"〜に関する",hint:"regard(見る) + ing ⇒ 〜を見て"},
@@ -1053,6 +966,7 @@ const dataPart2 = [
 {id:500,en:"maximum",jp:"最大の",hint:"max(最大)の"},
 ];
 // --- END PART 2 ---
+
 // --- DATA PART 3 (501-990) ---
 const dataPart3 = [
 {id:501,en:"aim",jp:"向ける",hint:"arm(武器)を向ける ⇒ 狙う"},
@@ -1070,7 +984,7 @@ const dataPart3 = [
 {id:513,en:"glance",jp:"さっと見る",hint:"チラッと見る"},
 {id:514,en:"ingredient",jp:"材料",hint:"in(中に) + gred(進む) ⇒ 中に入っているもの"},
 {id:515,en:"capable",jp:"能力がある",hint:"cap(つかむ) + able(できる) ⇒ 能力がある"},
-{id:516,en:"conclution",jp:"結論",hint:"conclude(結論づける)の名詞"},
+{id:516,en:"conclusion",jp:"結論",hint:"conclude(結論づける)の名詞"},
 {id:517,en:"emergency",jp:"緊急事態",hint:"emerge(現れる)こと ⇒ 突発事態"},
 {id:518,en:"load",jp:"積み込む",hint:"lead(導く)と同語源。旅の積荷"},
 {id:519,en:"punctual",jp:"時間を守る",hint:"point(点) ⇒ 時間の点を守る"},
@@ -1124,7 +1038,7 @@ const dataPart3 = [
 {id:567,en:"private",jp:"内密の",hint:"public(公)からpriv(奪う・分ける) ⇒ 私的な"},
 {id:568,en:"tip",jp:"ヒント",hint:"先端(tip) ⇒ 極秘情報 ⇒ ヒント"},
 {id:569,en:"agriculture",jp:"農業",hint:"agri(畑) + culture(耕す)"},
-{id:570,en:"railling",jp:"手すり",hint:"rail(レール) + ing"},
+{id:570,en:"railing",jp:"手すり",hint:"rail(レール) + ing"},
 {id:571,en:"theme",jp:"テーマ",hint:"提題(thesis)されたもの"},
 {id:572,en:"tie",jp:"つながり",hint:"ネクタイのタイ。結ぶもの"},
 {id:573,en:"fond",jp:"好ましい",hint:"be fond of (〜が好きだ)"},
@@ -1134,7 +1048,7 @@ const dataPart3 = [
 {id:577,en:"I wonder if you",jp:"〜していただけませんか",hint:"あなたが〜するか迷う ⇒ してくれませんか"},
 {id:578,en:"worth",jp:"〜の価値がある",hint:"worthy(価値ある)"},
 {id:579,en:"enroll",jp:"申し込む",hint:"roll(名簿)にin(入れる)"},
-{id:580,en:"envionment",jp:"環境",hint:"environmentの略"},
+{id:580,en:"environment",jp:"環境",hint:"en（中に）＋ viron（回転する）⇒中を取り囲む"},
 {id:581,en:"exactly",jp:"まったく",hint:"ex(外へ) + act(動かす) ⇒ 完了した ⇒ 正確な"},
 {id:582,en:"ideal",jp:"理想的な",hint:"idea(イデア・理想)の"},
 {id:583,en:"precisely",jp:"ちょうどに",hint:"precise(正確な) + ly"},
@@ -1279,7 +1193,7 @@ const dataPart3 = [
 {id:722,en:"essential",jp:"極めて重要な",hint:"essence(本質)の"},
 {id:723,en:"fluent",jp:"流暢な",hint:"flu(流れる)ような"},
 {id:724,en:"negotiation",jp:"交渉",hint:"ne(否定) + otium(暇) ⇒ 暇じゃない(仕事)"},
-{id:725,en:"ouccur",jp:"起こる",hint:"oc(〜へ) + cur(走る) ⇒ こちらへやって来る"},
+{id:725,en:"occur",jp:"起こる",hint:"oc(〜へ) + cur(走る) ⇒ こちらへやって来る"},
 {id:726,en:"workforce",jp:"労働人口",hint:"work(労働) + force(力・軍隊)"},
 {id:727,en:"stable",jp:"安定した",hint:"stand(立つ)できる ⇒ 安定"},
 {id:728,en:"aid",jp:"援助",hint:"First aid (応急処置)のaid"},
@@ -1548,28 +1462,37 @@ const dataPart3 = [
 ];
 // --- END PART 3 ---
 
+
+// =========================================================
+// ▲▲▲ データ貼り付けエリア ここまで ▲▲▲
+// =========================================================
+
 const rawData = [
   ...dataPart1,
   ...dataPart2,
   ...dataPart3
 ];
 
-// Verify sort order
 rawData.sort((a, b) => a.id - b.id);
 
 // --- APP LOGIC ---
-const STORAGE_KEY = 'toeic_990_ultimate_v9';
+const STORAGE_KEY = 'toeic_990_v9';
+const RESUME_KEY = 'toeic_990_resume_state';
+
 let weakIDs = [], currentQuestions = [], currentIndex = 0, score = 0, isWeakMode = false;
-let maskMode = 'none'; // 'none', 'en', 'jp'
-let isHintHidden = false; // New global state
+let maskMode = 'none';
+let isHintHidden = false;
+let wrongAnswers = []; 
+let userAnswers = [];
+let quizHistory = []; 
 
 function init() {
   loadWeakData();
   updateWeakUI();
-  setupRangeOptions(); // New function
+  setupRangeOptions();
   setupScrollBehavior();
-  // Set default search view
-  document.getElementById('range-filter').value = "1-100";
+  const rf = document.getElementById('range-filter');
+  if(rf) rf.value = "all";
   applyFilters();
 }
 
@@ -1587,12 +1510,14 @@ function updateWeakUI() {
   document.getElementById('weak-count').innerText = weakIDs.length;
 }
 
-// Generate Dropdown Options (100 increments)
 function setupRangeOptions() {
   const select = document.getElementById('range-filter');
-  select.innerHTML = ""; // Clear existing (or JS generated placeholders)
-  
-  // Add 100-step options
+  select.innerHTML = "";
+  const allOpt = document.createElement('option');
+  allOpt.value = "all";
+  allOpt.innerText = "全範囲 (1-990)";
+  select.appendChild(allOpt);
+
   const step = 100;
   for (let i = 0; i < 990; i += step) {
     let start = i + 1;
@@ -1602,41 +1527,28 @@ function setupRangeOptions() {
     opt.innerText = `No. ${start} - ${end}`;
     select.appendChild(opt);
   }
-  
-  // Add "All" option at the end
-  const allOpt = document.createElement('option');
-  allOpt.value = "all";
-  allOpt.innerText = "全範囲 (1-990)";
-  select.appendChild(allOpt);
 }
 
-// SCROLL BEHAVIOR (iOS Optimized)
 function setupScrollBehavior() {
   let lastScrollTop = 0;
   const stickyHeader = document.getElementById('sticky-header');
-  
-  // Throttle function for performance
+  const stickyHeaderList = document.getElementById('sticky-header-list'); 
   let ticking = false;
-
+  
   window.addEventListener('scroll', () => {
     if (!ticking) {
       window.requestAnimationFrame(() => {
-        // Only apply in search screen
-        if(document.getElementById('search-screen').classList.contains('hidden')) {
-          ticking = false;
-          return;
-        }
-
         let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const offset = scrollTop > 60 && scrollTop > lastScrollTop ? '-120%' : '0';
         
-        // Hide logic (Scroll Down > 10px and not at top)
-        if (scrollTop > lastScrollTop && scrollTop > 60) {
-          stickyHeader.style.transform = 'translateY(-120%)';
-        } else {
-          // Show logic (Scroll Up)
-          stickyHeader.style.transform = 'translateY(0)';
+        if(!document.getElementById('search-screen').classList.contains('hidden')) {
+           stickyHeader.style.transform = `translateY(${offset})`;
         }
-        lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
+        else if(!document.getElementById('list-screen').classList.contains('hidden')) {
+           stickyHeaderList.style.transform = `translateY(${offset})`;
+        }
+        
+        lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
         ticking = false;
       });
       ticking = true;
@@ -1646,7 +1558,7 @@ function setupScrollBehavior() {
 
 // Navigation
 function showScreen(id) {
-  ['home-screen', 'level-screen', 'quiz-screen', 'result-screen', 'list-screen', 'search-screen'].forEach(s => {
+  ['home-screen', 'quiz-screen', 'result-screen', 'list-screen', 'search-screen', 'bulk-test-screen'].forEach(s => {
     document.getElementById(s).classList.add('hidden');
   });
   document.getElementById(id).classList.remove('hidden');
@@ -1658,7 +1570,6 @@ function goHome() {
   updateWeakUI();
 }
 
-// --- AUDIO FUNCTION ---
 function speak(text) {
   if ('speechSynthesis' in window) {
     window.speechSynthesis.cancel();
@@ -1666,17 +1577,14 @@ function speak(text) {
     utterance.lang = 'en-US';
     utterance.rate = 0.9;
     window.speechSynthesis.speak(utterance);
-  } else {
-    alert("お使いのブラウザは音声再生に対応していません。");
   }
 }
 
-// --- SEARCH & WORD BOOK FUNCTION ---
+// --- SEARCH & WORD BOOK ---
 function showSearch() {
   showScreen('search-screen');
   document.getElementById('search-input').value = "";
-  // Reset to default 1-100 on open
-  document.getElementById('range-filter').value = "1-100";
+  document.getElementById('range-filter').value = "all";
   setMaskMode('none');
   applyFilters();
 }
@@ -1684,40 +1592,53 @@ function showSearch() {
 function setMaskMode(mode) {
   maskMode = mode;
   document.querySelectorAll('.mask-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(`mask-${mode}`).classList.add('active');
-  applyFilters();
+  if(mode !== 'none') {
+    const btn = document.getElementById(`mask-${mode}`);
+    if(btn) btn.classList.add('active');
+    const btnWeak = document.getElementById(`mask-${mode}-weak`);
+    if(btnWeak) btnWeak.classList.add('active');
+  }
+  if(!document.getElementById('search-screen').classList.contains('hidden')) applyFilters();
+  if(!document.getElementById('list-screen').classList.contains('hidden')) applyWeakFilters();
+}
+
+function toggleMask(target) {
+  if(maskMode === target) setMaskMode('none');
+  else setMaskMode(target);
+}
+
+function toggleMaskWeak(target) {
+  if(maskMode === target) setMaskMode('none');
+  else setMaskMode(target);
 }
 
 function toggleListHints() {
   isHintHidden = !isHintHidden;
   const btn = document.getElementById('hint-toggle');
-  if(isHintHidden) {
-    btn.classList.add('active');
-  } else {
-    btn.classList.remove('active');
-  }
+  if(isHintHidden) btn.classList.add('active');
+  else btn.classList.remove('active');
   applyFilters();
+}
+
+function toggleListHintsWeak() {
+  isHintHidden = !isHintHidden;
+  const btn = document.getElementById('hint-toggle-weak');
+  if(isHintHidden) btn.classList.add('active');
+  else btn.classList.remove('active');
+  applyWeakFilters();
 }
 
 function applyFilters() {
   const rangeVal = document.getElementById('range-filter').value;
   const searchVal = document.getElementById('search-input').value.toLowerCase().trim();
-  
   let list = rawData;
-
-  // 1. Filter by Range
   if(rangeVal !== 'all') {
     const [start, end] = rangeVal.split('-').map(Number);
     list = list.filter(d => d.id >= start && d.id <= end);
   }
-
-  // 2. Filter by Search Text
   if(searchVal) {
-    list = list.filter(d => 
-      d.en.toLowerCase().includes(searchVal) || d.jp.includes(searchVal)
-    );
+    list = list.filter(d => d.en.toLowerCase().includes(searchVal) || d.jp.includes(searchVal));
   }
-
   renderSearchResults(list);
 }
 
@@ -1728,14 +1649,16 @@ function renderSearchResults(list) {
     con.innerHTML = "<div style='padding:40px; text-align:center; color:#94a3b8;'>見つかりません</div>";
     return;
   }
-
   list.forEach(d => {
     const div = document.createElement('div');
     div.className = 'list-item';
-    
     const enClass = maskMode === 'en' ? 'masked' : '';
     const jpClass = maskMode === 'jp' ? 'masked' : '';
     const hintClass = isHintHidden ? 'hidden' : '';
+    
+    const isWeak = weakIDs.includes(d.id);
+    const btnText = isWeak ? "✔ 克服" : "+ 苦手";
+    const btnClass = isWeak ? "is-weak" : "is-not-weak";
 
     div.innerHTML = `
       <span class="list-id-top">No.${d.id}</span>
@@ -1744,10 +1667,9 @@ function renderSearchResults(list) {
         <button class="audio-btn" onclick="speak('${d.en}')">🔊</button>
       </div>
       <div class="list-jp ${jpClass}" onclick="toggleReveal(this)">${d.jp}</div>
-      
       <div class="hint-row">
         <div class="list-hint ${hintClass}">${d.hint}</div>
-        <button class="weak-add-btn" onclick="addToWeak(${d.id}); alert('追加しました')">+ 苦手へ</button>
+        <button id="wb-btn-${d.id}" class="weak-toggle-btn ${btnClass}" onclick="toggleWeak(${d.id})">${btnText}</button>
       </div>
     `;
     con.appendChild(div);
@@ -1755,79 +1677,329 @@ function renderSearchResults(list) {
 }
 
 function toggleReveal(el) {
-  if (el.classList.contains('masked')) {
-    el.classList.toggle('revealed');
+  if (el.classList.contains('masked')) el.classList.toggle('revealed');
+}
+
+function toggleWeak(id) {
+  if(weakIDs.includes(id)) {
+    weakIDs = weakIDs.filter(w => w !== id);
+  } else {
+    if(!weakIDs.includes(id)) weakIDs.push(id);
+  }
+  saveWeakData();
+
+  const btn = document.getElementById(`wb-btn-${id}`);
+  if(btn) {
+    if(weakIDs.includes(id)) {
+      btn.className = "weak-toggle-btn is-weak";
+      btn.innerText = "✔ 克服";
+    } else {
+      btn.className = "weak-toggle-btn is-not-weak";
+      btn.innerText = "+ 苦手";
+    }
+  }
+  
+  if(!document.getElementById('list-screen').classList.contains('hidden')) {
+    applyWeakFilters();
   }
 }
 
-// --- QUIZ LOGIC ---
+// --- WEAK LIST LOGIC ---
+function showList() {
+  if(!weakIDs.length) return alert("現在、苦手単語はありません。");
+  showScreen('list-screen');
+  document.getElementById('weak-sort-filter').value = "latest";
+  setMaskMode('none');
+  applyWeakFilters();
+}
+
+function applyWeakFilters() {
+  const sortType = document.getElementById('weak-sort-filter').value;
+  let list = [];
+  let sortedIDs = [...weakIDs];
+  if(sortType === 'latest') {
+    sortedIDs.reverse();
+  } else {
+    sortedIDs.sort((a,b) => a - b);
+  }
+  list = sortedIDs.map(id => rawData.find(d => d.id === id)).filter(x => x);
+  renderWeakResults(list);
+}
+
+function renderWeakResults(list) {
+  const con = document.getElementById('list-content');
+  con.innerHTML = "";
+  if(list.length === 0) {
+    con.innerHTML = "<div style='padding:40px; text-align:center; color:#94a3b8;'>見つかりません</div>";
+    return;
+  }
+  
+  list.forEach(d => {
+    const div = document.createElement('div');
+    div.className = 'list-item';
+    const enClass = maskMode === 'en' ? 'masked' : '';
+    const jpClass = maskMode === 'jp' ? 'masked' : '';
+    const hintClass = isHintHidden ? 'hidden' : '';
+
+    div.innerHTML = `
+      <span class="list-id-top">No.${d.id}</span>
+      <div class="list-top">
+        <span class="list-en ${enClass}" style="color:var(--wrong);" onclick="toggleReveal(this)">${d.en}</span>
+        <button class="audio-btn" onclick="speak('${d.en}')">🔊</button>
+      </div>
+      <div class="list-jp ${jpClass}" onclick="toggleReveal(this)">${d.jp}</div>
+      
+      <div class="hint-row">
+        <div class="list-hint ${hintClass}">${d.hint}</div>
+        <button class="weak-toggle-btn is-weak" onclick="toggleWeak(${d.id})">✔ 克服</button>
+      </div>
+    `;
+    con.appendChild(div);
+  });
+}
+
 function showLevels(count) {
-  const container = document.getElementById('level-list');
+  document.getElementById('course-modal-title').innerText = `${count}問コースの範囲選択`;
+  const container = document.getElementById('course-list');
   container.innerHTML = "";
   
-  // Create 50-step buttons
   const step = 50;
   for (let i = 0; i < 990; i += step) {
     let start = i;
     let end = Math.min(i + step, 990);
     if (start >= end) continue;
-
     const label = `${start + 1} - ${end}`;
-    const btn = document.createElement('div');
-    btn.className = 'menu-btn';
-    btn.innerHTML = `<span class="menu-title">${label}</span>`;
-    btn.onclick = () => startQuiz(start, end, count);
+    
+    const btn = document.createElement('button');
+    btn.className = 'course-btn';
+    btn.innerText = label;
+    btn.onclick = () => {
+        closeCourseModal();
+        setTimeout(() => triggerQuizStart('range', label, {start, end, count}), 200);
+    };
     container.appendChild(btn);
   }
   
-  showScreen('level-screen');
+  document.getElementById('course-modal').classList.remove('hidden');
 }
 
-function startRandom() {
-  startQuiz(0, 990, 50);
+function showRandomModes() {
+  document.getElementById('course-modal-title').innerText = `ランダム出題 (全990語)`;
+  const container = document.getElementById('course-list');
+  container.innerHTML = "";
+  
+  [10, 30, 50].forEach(num => {
+    const btn = document.createElement('button');
+    btn.className = 'course-btn';
+    btn.innerText = `${num}問`;
+    btn.style.padding = "20px";
+    btn.onclick = () => {
+        closeCourseModal();
+        const label = `ランダム ${num}問`;
+        setTimeout(() => triggerQuizStart('random', label, {count: num}), 200);
+    };
+    container.appendChild(btn);
+  });
+  
+  document.getElementById('course-modal').classList.remove('hidden');
+}
+
+function closeCourseModal(e) {
+  if (e) e.stopPropagation(); 
+  const overlay = document.getElementById('course-modal');
+  const box = overlay.querySelector('.modal-box');
+  box.classList.add('closing');
+  setTimeout(() => {
+    overlay.classList.add('hidden');
+    box.classList.remove('closing');
+  }, 180);
+}
+
+// --- SORTED CONFUSING OPTIONS ---
+function showConfusingOptions() {
+  document.getElementById('course-modal-title').innerText = "接頭辞で選ぶ";
+  const container = document.getElementById('course-list');
+  container.innerHTML = "";
+  
+  const prefixes = ['con', 'com', 'ex', 'pre', 'pro', 're', 'de', 'in', 'im', 'sub', 'trans', 'dis', 'un'];
+  
+  let prefixData = prefixes.map(p => {
+    const count = rawData.filter(d => d.en.startsWith(p)).length;
+    return { prefix: p, count: count };
+  });
+
+  prefixData.sort((a, b) => b.count - a.count);
+
+  prefixData.forEach(item => {
+    if(item.count > 0) {
+        const btn = document.createElement('button');
+        btn.className = 'course-btn';
+        const label = `${item.prefix}- コース`;
+        btn.innerHTML = `<span style="font-size:18px; font-weight:bold;">${item.prefix}-</span> <span style="font-size:12px;">(${item.count}語)</span>`;
+        btn.onclick = () => {
+            closeCourseModal();
+            setTimeout(() => triggerQuizStart('prefix', label, {prefix: item.prefix}), 200);
+        };
+        container.appendChild(btn);
+    }
+  });
+  
+  document.getElementById('course-modal').classList.remove('hidden');
 }
 
 function startWeakMode() {
   if(!weakIDs.length) return alert("苦手単語はありません！");
-  isWeakMode = true;
-  let pool = rawData.filter(d => weakIDs.includes(d.id));
-  pool.sort(() => Math.random() - 0.5);
-  currentQuestions = pool;
-  startQuizSequence();
+  triggerQuizStart('weak', '苦手特訓', {});
 }
 
-function startQuiz(start, end, count) {
-  isWeakMode = false;
-  let pool = rawData.slice(start, end);
-  pool.sort(() => Math.random() - 0.5);
-  currentQuestions = pool.slice(0, count);
-  startQuizSequence();
+// =========================================================
+// ▼▼▼ RESUME / COMMON START LOGIC ▼▼▼
+// =========================================================
+let pendingQuizCallback = null; 
+
+function triggerQuizStart(mode, label, params) {
+  const savedState = localStorage.getItem(RESUME_KEY);
+  
+  // 開始用コールバック（新規開始）
+  const startNewAction = () => {
+    isWeakMode = (mode === 'weak');
+    let pool = [];
+
+    if (mode === 'range') {
+        pool = rawData.slice(params.start, params.end);
+    } else if (mode === 'random') {
+        pool = [...rawData];
+    } else if (mode === 'prefix') {
+        pool = rawData.filter(d => d.en.startsWith(params.prefix));
+    } else if (mode === 'weak') {
+        pool = rawData.filter(d => weakIDs.includes(d.id));
+    }
+
+    pool.sort(() => Math.random() - 0.5);
+    
+    if(params.count && pool.length > params.count) {
+        pool = pool.slice(0, params.count);
+    } else if (mode === 'prefix' && pool.length > 20) {
+        pool = pool.slice(0, 20); 
+    }
+
+    currentQuestions = pool;
+    startQuizSequence(mode, label);
+  };
+
+  if(savedState) {
+    const state = JSON.parse(savedState);
+    if(state.label === label && state.mode !== 'bulk') {
+      pendingQuizCallback = startNewAction;
+      document.getElementById('resume-modal').classList.remove('hidden');
+      return;
+    }
+  }
+
+  startNewAction();
 }
 
-function startQuizSequence() {
-  currentIndex = 0;
-  score = 0;
+function startBulkTest(count) {
+  const savedState = localStorage.getItem(RESUME_KEY);
+  const startNewBulk = () => {
+    let pool = [...rawData];
+    pool.sort(() => Math.random() - 0.5);
+    currentQuestions = pool.slice(0, count);
+    userAnswers = new Array(count).fill(null);
+    showScreen('bulk-test-screen');
+    renderBulkTest();
+    saveBulkState();
+  };
+
+  if (savedState) {
+    const state = JSON.parse(savedState);
+    if (state.mode === 'bulk') {
+       pendingQuizCallback = startNewBulk;
+       document.getElementById('resume-modal').classList.remove('hidden');
+       return;
+    }
+  }
+  startNewBulk();
+}
+
+function confirmResume() {
+  document.getElementById('resume-modal').classList.add('hidden');
+  const savedState = localStorage.getItem(RESUME_KEY);
+  if(!savedState) return; 
+
+  const s = JSON.parse(savedState);
+
+  if(s.mode === 'bulk') {
+    currentQuestions = s.questions;
+    userAnswers = s.userAnswers;
+    restoreBulkTest();
+    return;
+  }
+
+  currentQuestions = s.questions;
+  currentIndex = s.index;
+  score = s.score;
+  wrongAnswers = s.wrong;
+  quizHistory = s.history || []; 
+  isWeakMode = (s.label === '苦手特訓');
+
   showScreen('quiz-screen');
   showQuestion();
 }
 
-function showQuestion() {
+function cancelResume() {
+  document.getElementById('resume-modal').classList.add('hidden');
+  localStorage.removeItem(RESUME_KEY);
+  if(pendingQuizCallback) pendingQuizCallback();
+}
+
+function startQuizSequence(mode, label = null) {
+  currentIndex = 0;
+  score = 0;
+  wrongAnswers = [];
+  quizHistory = []; 
+  localStorage.removeItem(RESUME_KEY);
+  currentQuestions.forEach(q => q._mode = mode); 
+  if(label) currentQuestions._label = label;
+  showScreen('quiz-screen');
+  showQuestion();
+}
+
+// --- QUIZ LOGIC (FIXED) ---
+function prevQ() {
+  if (currentIndex > 0) {
+    currentIndex--;
+    showQuestion(true);
+  }
+}
+
+function showQuestion(isReview = false) {
   const q = currentQuestions[currentIndex];
   document.getElementById('progress').innerText = `${currentIndex + 1} / ${currentQuestions.length}`;
   document.getElementById('q-id').innerText = `No.${q.id}`;
   document.getElementById('q-text').innerText = q.en;
   
-  // Hint reset
   document.getElementById('hint-content').style.display = 'none';
   document.getElementById('hint-content').innerText = q.hint;
   document.getElementById('hint-btn').style.display = 'inline-block';
-
-  // Feedback reset
+  
   document.getElementById('feedback').style.display = 'none';
   document.getElementById('options').innerHTML = "";
   
-  // Options
+  const prevBtn = document.getElementById('prev-btn');
+  if (prevBtn) {
+    prevBtn.style.display = currentIndex > 0 ? 'inline-block' : 'none';
+  }
+
+  if(quizHistory[currentIndex]) {
+    restoreResult(quizHistory[currentIndex]);
+    return;
+  }
+
   let distractors = rawData.filter(d => d.id !== q.id);
+  let similar = distractors.filter(d => d.en[0] === q.en[0]);
+  if(similar.length > 3) distractors = similar;
+  
   distractors.sort(() => Math.random() - 0.5);
   let opts = distractors.slice(0, 3);
   opts.push(q);
@@ -1838,9 +2010,54 @@ function showQuestion() {
     const btn = document.createElement('button');
     btn.className = 'option-btn';
     btn.innerText = o.jp;
+    btn.dataset.id = o.id; // ★修正：IDを保存して、日本語重複問題を回避
     btn.onclick = () => checkAnswer(o, q);
     optContainer.appendChild(btn);
   });
+
+  if(currentQuestions._label) {
+    saveQuizState();
+  }
+}
+
+function restoreResult(historyData) {
+  const optContainer = document.getElementById('options');
+  historyData.options.forEach(o => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    
+    if(o.id === historyData.correctId) btn.classList.add('correct');
+    if(historyData.selectedId === o.id && o.id !== historyData.correctId) btn.classList.add('wrong');
+    
+    let originalWord = "";
+    // ★修正：IDを使って正しい英語を取得
+    const wData = rawData.find(d => d.id === o.id);
+    if(wData) originalWord = wData.en;
+    
+    btn.innerHTML = `<span>${o.jp}</span> <span style="font-size:14px; opacity:0.6; font-weight:normal;">${originalWord}</span>`;
+    
+    btn.disabled = true; 
+    optContainer.appendChild(btn);
+  });
+
+  const fb = document.getElementById('feedback');
+  const fbMsg = document.getElementById('fb-msg');
+  const correct = rawData.find(d => d.id === historyData.correctId);
+  
+  if(historyData.isCorrect) {
+    fbMsg.innerText = "正解! 🎉 (回答済み)";
+    fbMsg.style.color = "var(--correct)";
+  } else {
+    fbMsg.innerText = "不正解... 😢 (回答済み)";
+    fbMsg.style.color = "var(--wrong)";
+  }
+  
+  document.getElementById('fb-correct').innerText = `${correct.en} : ${correct.jp}`;
+  document.getElementById('fb-hint').innerText = correct.hint;
+  fb.style.display = 'block';
+  
+  document.getElementById('hint-content').style.display = 'block';
+  document.getElementById('hint-btn').style.display = 'none';
 }
 
 function speakCurrentQ() {
@@ -1855,11 +2072,33 @@ function toggleHint() {
 }
 
 function checkAnswer(selected, correct) {
-  const opts = document.getElementById('options').children;
+  const opts = Array.from(document.getElementById('options').children);
+  const optData = opts.map(btn => {
+     // ID経由でデータを再取得するか、ボタンに仕込んだIDを使う
+     const wId = parseInt(btn.dataset.id);
+     return {jp: btn.innerText, id: wId};
+  });
+  
+  quizHistory[currentIndex] = {
+    selectedId: selected.id,
+    correctId: correct.id,
+    isCorrect: selected.id === correct.id,
+    options: optData
+  };
+
   for(let btn of opts) {
     btn.disabled = true;
+    
+    // ★修正：IDを使って正しい英語を取得（日本語重複時のバグ修正）
+    const wId = parseInt(btn.dataset.id);
+    const wData = rawData.find(d => d.id === wId);
+    let enText = "";
+    if(wData) enText = wData.en;
+    
     if(btn.innerText === correct.jp) btn.classList.add('correct');
     if(btn.innerText === selected.jp && selected.id !== correct.id) btn.classList.add('wrong');
+    
+    btn.innerHTML = `<span>${btn.innerText}</span> <span style="font-size:16px; opacity:0.8; font-weight:normal;">${enText}</span>`;
   }
 
   const fb = document.getElementById('feedback');
@@ -1869,25 +2108,151 @@ function checkAnswer(selected, correct) {
     score++;
     fbMsg.innerText = "正解! 🎉";
     fbMsg.style.color = "var(--correct)";
-    if(isWeakMode) removeFromWeak(correct.id); 
+    if(isWeakMode) toggleWeak(correct.id); 
   } else {
     fbMsg.innerText = "不正解... 😢";
     fbMsg.style.color = "var(--wrong)";
-    addToWeak(correct.id);
+    wrongAnswers.push(correct);
+    if(!weakIDs.includes(correct.id)) toggleWeak(correct.id);
   }
 
   document.getElementById('fb-correct').innerText = `${correct.en} : ${correct.jp}`;
   document.getElementById('fb-hint').innerText = correct.hint;
   fb.style.display = 'block';
+  
+  if(currentQuestions._label) saveQuizState();
+
+  setTimeout(() => {
+    fb.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 100);
+}
+
+function saveQuizState() {
+  const state = {
+      mode: 'quiz', 
+      label: currentQuestions._label,
+      questions: currentQuestions,
+      index: currentIndex,
+      score: score,
+      wrong: wrongAnswers,
+      history: quizHistory
+    };
+  localStorage.setItem(RESUME_KEY, JSON.stringify(state));
 }
 
 function nextQ() {
   currentIndex++;
   if(currentIndex < currentQuestions.length) {
     showQuestion();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   } else {
+    localStorage.removeItem(RESUME_KEY);
     showResult();
   }
+}
+
+// --- BULK TEST LOGIC ---
+
+function renderBulkTest() {
+  const con = document.getElementById('bulk-test-list');
+  con.innerHTML = "";
+  
+  document.getElementById('bulk-score-area').style.display = 'none';
+  document.getElementById('bulk-subtitle').style.display = 'block';
+  document.getElementById('bulk-grade-btn').style.display = 'block';
+  document.getElementById('bulk-home-btn').style.display = 'none';
+
+  const allJpOptions = currentQuestions.map(q => q.jp).sort(() => Math.random() - 0.5);
+
+  currentQuestions.forEach((q, idx) => {
+    const div = document.createElement('div');
+    div.style = "margin-bottom:30px; padding:15px; border-bottom:1px solid #eee;";
+    div.innerHTML = `
+      <div style="font-size:14px; color:var(--text-sub); font-weight:bold; margin-bottom:5px;">Q${idx+1}. (No.${q.id})</div>
+      <div style="font-size:24px; font-weight:800; margin-bottom:15px; color:var(--text-main);">${q.en}</div>
+      
+      <select id="bulk-select-${idx}" onchange="recordBulkAnswer(${idx}, this.value)" style="width:100%; padding:12px; border-radius:12px; border:1px solid var(--border); font-size:16px; background:#fff; appearance:none;">
+        <option value="">選択してください</option>
+        ${allJpOptions.map(jp => `<option value="${jp}">${jp}</option>`).join('')}
+      </select>
+      <div id="bulk-result-${idx}" style="margin-top:10px; font-weight:bold; display:none;"></div>
+    `;
+    con.appendChild(div);
+  });
+}
+
+function restoreBulkTest() {
+  showScreen('bulk-test-screen');
+  renderBulkTest();
+  userAnswers.forEach((ans, idx) => {
+    if(ans) {
+      const select = document.getElementById(`bulk-select-${idx}`);
+      if(select) select.value = ans;
+    }
+  });
+}
+
+function recordBulkAnswer(idx, value) {
+  userAnswers[idx] = value;
+  saveBulkState(); 
+}
+
+function saveBulkState() {
+  const state = {
+    mode: 'bulk',
+    questions: currentQuestions,
+    userAnswers: userAnswers
+  };
+  localStorage.setItem(RESUME_KEY, JSON.stringify(state));
+}
+
+function finishBulkTest() {
+  score = 0;
+  wrongAnswers = [];
+
+  currentQuestions.forEach((q, idx) => {
+    const userAns = userAnswers[idx];
+    const resDiv = document.getElementById(`bulk-result-${idx}`);
+    const select = document.getElementById(`bulk-select-${idx}`);
+    
+    select.disabled = true;
+    resDiv.style.display = 'block';
+    
+    if (userAns === q.jp) {
+      score++;
+      resDiv.innerHTML = `<span style="color:var(--correct); font-size:16px; font-weight:900;">正解！⭕️</span>`;
+      select.style.border = "2px solid var(--correct)";
+      select.style.background = "#E8FAEB";
+    } else {
+      wrongAnswers.push(q);
+      if(!weakIDs.includes(q.id)) toggleWeak(q.id);
+      resDiv.innerHTML = `
+        <span style="color:var(--wrong); font-size:16px; font-weight:900;">不正解... ❌</span><br>
+        <span style="font-size:17px; color:var(--text-main); font-weight:bold;">正解: ${q.jp}</span>
+        <div style="font-size:14px; color:var(--text-sub); margin-top:6px;">${q.hint}</div>
+      `;
+      select.style.border = "2px solid var(--wrong)";
+      select.style.background = "#FFEBEA";
+    }
+  });
+
+  document.getElementById('bulk-subtitle').style.display = 'none';
+  const scoreArea = document.getElementById('bulk-score-area');
+  scoreArea.style.display = 'block';
+  document.getElementById('bulk-score-val').innerText = `${score} / ${currentQuestions.length}`;
+  
+  let rate = score / currentQuestions.length;
+  let txt = "";
+  if(rate === 1) txt = "Perfect!! 素晴らしい！🏆";
+  else if(rate >= 0.8) txt = "Great Job! その調子！✨";
+  else txt = "復習して苦手をなくしましょう！";
+  document.getElementById('bulk-score-msg').innerText = txt;
+
+  document.getElementById('bulk-grade-btn').style.display = 'none';
+  document.getElementById('bulk-home-btn').style.display = 'block';
+
+  localStorage.removeItem(RESUME_KEY);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function showResult() {
@@ -1902,46 +2267,25 @@ function showResult() {
   
   document.getElementById('result-msg').innerText = txt;
   document.getElementById('weak-msg').innerText = isWeakMode ? `今回、苦手リストから正解した単語はリストから外しました！` : "";
-}
 
-// Weak List Management
-function addToWeak(id) {
-  if(!weakIDs.includes(id)) {
-    weakIDs.push(id);
-    weakIDs.sort((a,b)=>a-b);
-    saveWeakData();
-  }
-}
-
-function removeFromWeak(id) {
-  weakIDs = weakIDs.filter(w => w !== id);
-  saveWeakData();
-}
-
-function showList(type) {
-  if(!weakIDs.length) return alert("現在、苦手単語はありません。");
-  showScreen('list-screen');
-  const con = document.getElementById('list-content');
-  con.innerHTML = "";
+  const wc = document.getElementById('wrong-container');
+  const wl = document.getElementById('wrong-list');
+  wl.innerHTML = "";
   
-  const list = rawData.filter(d => weakIDs.includes(d.id));
-  list.forEach(d => {
-    const div = document.createElement('div');
-    div.className = 'list-item';
-    div.innerHTML = `
-      <span class="list-id-top">No.${d.id}</span>
-      <div class="list-top">
-        <span class="list-en" style="color:var(--wrong);">${d.en}</span>
-        <button class="audio-btn" onclick="speak('${d.en}')">🔊</button>
-      </div>
-      <div class="list-jp">${d.jp}</div>
-      <div class="hint-row">
-        <div class="list-hint">${d.hint}</div>
-        <button class="weak-add-btn" style="color:var(--correct); background:#E8FAEA;" onclick="removeFromWeak(${d.id}); showList('weak');">✔ 克服！(削除)</button>
-      </div>
-    `;
-    con.appendChild(div);
-  });
+  if(wrongAnswers.length > 0) {
+    wc.style.display = 'block';
+    wrongAnswers.forEach(w => {
+      const div = document.createElement('div');
+      div.className = 'result-item';
+      div.innerHTML = `
+        <span class="ri-en">${w.en}</span>
+        <span class="ri-jp">${w.jp}</span>
+      `;
+      wl.appendChild(div);
+    });
+  } else {
+    wc.style.display = 'none';
+  }
 }
 
 // Init
