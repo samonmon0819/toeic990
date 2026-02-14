@@ -51,7 +51,6 @@
     padding: 20px 20px calc(80px + var(--safe-bottom)) 20px;
   }
   
-  /* クイズ画面の下部余白を個別に縮小 */
   #quiz-screen.content-padding {
     padding-bottom: calc(20px + var(--safe-bottom)) !important;
   }
@@ -202,8 +201,29 @@
   .ri-jp { font-size: 16px; color: var(--text-main); flex: 1; text-align: right; margin-left: 20px;}
 
   /* MODAL */
-  .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 1000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
-  .modal-box { background: white; padding: 24px; border-radius: 20px; width: 85%; max-width: 340px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1); animation: popIn 0.2s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; max-height: 80vh; }
+  /* ★修正ポイント: animation-fill-mode: both で初期状態を完全制御 */
+  .modal-overlay { 
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+    background: rgba(0,0,0,0.4); z-index: 1000; 
+    display: flex; align-items: center; justify-content: center; 
+    backdrop-filter: blur(4px); 
+    -webkit-backdrop-filter: blur(4px);
+    
+    opacity: 0; 
+    animation: fadeIn 0.2s ease-out both; 
+  }
+  
+  .modal-box { 
+    background: white; padding: 24px; border-radius: 20px; 
+    width: 85%; max-width: 340px; text-align: center; 
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+    display: flex; flex-direction: column; max-height: 80vh; 
+
+    /* ★修正ポイント: 少し遅らせて出現させることで背景との前後関係を明確化 */
+    opacity: 0;
+    transform: scale(0.95);
+    animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both; 
+  }
   
   .modal-box.closing { animation: popOut 0.2s forwards; }
 
@@ -232,7 +252,8 @@
   .hidden { display: none !important; }
   .safe-area-spacer { height: calc(20px + var(--safe-bottom)); }
 
-  @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes popIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
   @keyframes popOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.9); } }
 </style>
 </head>
@@ -1462,7 +1483,6 @@ const dataPart3 = [
 ];
 // --- END PART 3 ---
 
-
 // =========================================================
 // ▲▲▲ データ貼り付けエリア ここまで ▲▲▲
 // =========================================================
@@ -2010,7 +2030,7 @@ function showQuestion(isReview = false) {
     const btn = document.createElement('button');
     btn.className = 'option-btn';
     btn.innerText = o.jp;
-    btn.dataset.id = o.id; // ★修正：IDを保存して、日本語重複問題を回避
+    btn.dataset.id = o.id; 
     btn.onclick = () => checkAnswer(o, q);
     optContainer.appendChild(btn);
   });
@@ -2030,7 +2050,6 @@ function restoreResult(historyData) {
     if(historyData.selectedId === o.id && o.id !== historyData.correctId) btn.classList.add('wrong');
     
     let originalWord = "";
-    // ★修正：IDを使って正しい英語を取得
     const wData = rawData.find(d => d.id === o.id);
     if(wData) originalWord = wData.en;
     
@@ -2074,7 +2093,6 @@ function toggleHint() {
 function checkAnswer(selected, correct) {
   const opts = Array.from(document.getElementById('options').children);
   const optData = opts.map(btn => {
-     // ID経由でデータを再取得するか、ボタンに仕込んだIDを使う
      const wId = parseInt(btn.dataset.id);
      return {jp: btn.innerText, id: wId};
   });
@@ -2089,7 +2107,6 @@ function checkAnswer(selected, correct) {
   for(let btn of opts) {
     btn.disabled = true;
     
-    // ★修正：IDを使って正しい英語を取得（日本語重複時のバグ修正）
     const wId = parseInt(btn.dataset.id);
     const wData = rawData.find(d => d.id === wId);
     let enText = "";
