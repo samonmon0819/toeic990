@@ -51,8 +51,9 @@
     padding: 20px 20px calc(80px + var(--safe-bottom)) 20px;
   }
   
+  /* ★修正: クイズ画面の下部余白を小さく調整 */
   #quiz-screen.content-padding {
-    padding-bottom: calc(20px + var(--safe-bottom)) !important;
+    padding-bottom: calc(5px + var(--safe-bottom)) !important;
   }
 
   /* --- HEADER --- */
@@ -200,7 +201,7 @@
   .ri-en { font-weight: 800; color: var(--wrong); font-size: 20px; letter-spacing: -0.5px; }
   .ri-jp { font-size: 16px; color: var(--text-main); flex: 1; text-align: right; margin-left: 20px;}
 
-  /* MODAL */
+  /* MODAL (修正版：アニメーション不具合対応) */
   .modal-overlay { 
     position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
     background: rgba(0,0,0,0.4); z-index: 1000; 
@@ -208,8 +209,15 @@
     backdrop-filter: blur(4px); 
     -webkit-backdrop-filter: blur(4px);
     
-    opacity: 0; 
-    animation: fadeIn 0.2s ease-out both; 
+    /* 初期状態は非表示 */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease-out;
+  }
+  /* 表示用のクラス */
+  .modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
   }
   
   .modal-box { 
@@ -217,13 +225,21 @@
     width: 85%; max-width: 340px; text-align: center; 
     box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
     display: flex; flex-direction: column; max-height: 80vh; 
-
+    
+    /* 初期状態: 透明＆少し小さい */
     opacity: 0;
     transform: scale(0.95);
-    animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both; 
   }
   
-  .modal-box.closing { animation: popOut 0.2s forwards; }
+  /* 表示時のアニメーション用クラス */
+  .modal-box.active {
+    animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both;
+  }
+  
+  /* 閉じる時のアニメーション用クラス */
+  .modal-box.closing { 
+    animation: popOut 0.2s forwards; 
+  }
 
   .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 15px; color: var(--text-main); flex-shrink: 0; }
   .modal-desc { font-size: 14px; color: var(--text-sub); margin-bottom: 20px; line-height: 1.5; }
@@ -250,7 +266,6 @@
   .hidden { display: none !important; }
   .safe-area-spacer { height: calc(20px + var(--safe-bottom)); }
 
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   @keyframes popIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
   @keyframes popOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.9); } }
 </style>
@@ -1691,6 +1706,16 @@ function setupScrollBehavior() {
 
 // Navigation
 function showScreen(id) {
+  // ★修正：画面遷移時にモーダルも強制的に閉じておく（念のため）
+  document.querySelectorAll('.modal-overlay').forEach(el => {
+    el.classList.remove('active', 'hidden'); // 一旦全てリセット
+    // hiddenを付けるべきか？初期状態に戻す
+    el.classList.remove('active');
+    // アニメーション中のクラスも消す
+    const box = el.querySelector('.modal-box');
+    if(box) box.classList.remove('active', 'closing');
+  });
+
   ['home-screen', 'quiz-screen', 'result-screen', 'list-screen', 'search-screen', 'bulk-test-screen'].forEach(s => {
     document.getElementById(s).classList.add('hidden');
   });
@@ -1913,7 +1938,16 @@ function showLevels(count) {
     container.appendChild(btn);
   }
   
-  document.getElementById('course-modal').classList.remove('hidden');
+  // ★修正：モーダル表示処理
+  const overlay = document.getElementById('course-modal');
+  const box = overlay.querySelector('.modal-box');
+  overlay.classList.remove('hidden');
+  
+  // 確実にアニメーションさせるためのリフローハック
+  void overlay.offsetWidth; 
+  
+  overlay.classList.add('active');
+  box.classList.add('active');
 }
 
 function showRandomModes() {
@@ -1934,18 +1968,29 @@ function showRandomModes() {
     container.appendChild(btn);
   });
   
-  document.getElementById('course-modal').classList.remove('hidden');
+  // ★修正：モーダル表示処理
+  const overlay = document.getElementById('course-modal');
+  const box = overlay.querySelector('.modal-box');
+  overlay.classList.remove('hidden');
+  void overlay.offsetWidth;
+  overlay.classList.add('active');
+  box.classList.add('active');
 }
 
 function closeCourseModal(e) {
   if (e) e.stopPropagation(); 
   const overlay = document.getElementById('course-modal');
   const box = overlay.querySelector('.modal-box');
+  
+  // ★修正：閉じるアニメーション処理
+  box.classList.remove('active');
   box.classList.add('closing');
+  overlay.classList.remove('active');
+  
   setTimeout(() => {
     overlay.classList.add('hidden');
     box.classList.remove('closing');
-  }, 180);
+  }, 200);
 }
 
 // --- SORTED CONFUSING OPTIONS ---
@@ -1977,7 +2022,13 @@ function showConfusingOptions() {
     }
   });
   
-  document.getElementById('course-modal').classList.remove('hidden');
+  // ★修正：モーダル表示処理
+  const overlay = document.getElementById('course-modal');
+  const box = overlay.querySelector('.modal-box');
+  overlay.classList.remove('hidden');
+  void overlay.offsetWidth;
+  overlay.classList.add('active');
+  box.classList.add('active');
 }
 
 function startWeakMode() {
@@ -2024,7 +2075,14 @@ function triggerQuizStart(mode, label, params) {
     const state = JSON.parse(savedState);
     if(state.label === label && state.mode !== 'bulk') {
       pendingQuizCallback = startNewAction;
-      document.getElementById('resume-modal').classList.remove('hidden');
+      
+      // ★修正：レジュームモーダル表示処理
+      const overlay = document.getElementById('resume-modal');
+      const box = overlay.querySelector('.modal-box');
+      overlay.classList.remove('hidden');
+      void overlay.offsetWidth;
+      overlay.classList.add('active');
+      box.classList.add('active');
       return;
     }
   }
@@ -2048,7 +2106,14 @@ function startBulkTest(count) {
     const state = JSON.parse(savedState);
     if (state.mode === 'bulk') {
        pendingQuizCallback = startNewBulk;
-       document.getElementById('resume-modal').classList.remove('hidden');
+       
+       // ★修正：レジュームモーダル表示処理
+       const overlay = document.getElementById('resume-modal');
+       const box = overlay.querySelector('.modal-box');
+       overlay.classList.remove('hidden');
+       void overlay.offsetWidth;
+       overlay.classList.add('active');
+       box.classList.add('active');
        return;
     }
   }
@@ -2056,7 +2121,10 @@ function startBulkTest(count) {
 }
 
 function confirmResume() {
-  document.getElementById('resume-modal').classList.add('hidden');
+  const overlay = document.getElementById('resume-modal');
+  overlay.classList.remove('active');
+  overlay.classList.add('hidden');
+  
   const savedState = localStorage.getItem(RESUME_KEY);
   if(!savedState) return; 
 
@@ -2081,9 +2149,18 @@ function confirmResume() {
 }
 
 function cancelResume() {
-  document.getElementById('resume-modal').classList.add('hidden');
-  localStorage.removeItem(RESUME_KEY);
-  if(pendingQuizCallback) pendingQuizCallback();
+  const overlay = document.getElementById('resume-modal');
+  const box = overlay.querySelector('.modal-box');
+  box.classList.remove('active');
+  box.classList.add('closing');
+  overlay.classList.remove('active');
+  
+  setTimeout(() => {
+    overlay.classList.add('hidden');
+    box.classList.remove('closing');
+    localStorage.removeItem(RESUME_KEY);
+    if(pendingQuizCallback) pendingQuizCallback();
+  }, 200);
 }
 
 function startQuizSequence(mode, label = null) {
@@ -2316,7 +2393,7 @@ function renderBulkTest() {
       <div style="font-size:24px; font-weight:800; margin-bottom:15px; color:var(--text-main);">${q.en}</div>
       
       <select id="bulk-select-${idx}" onchange="recordBulkAnswer(${idx}, this.value)" style="width:100%; padding:12px; border-radius:12px; border:1px solid var(--border); font-size:16px; background:#fff; appearance:none;">
-        <option value="">選択してください（50音順）</option>
+        <option value="">選択してください</option>
         ${uniqueJpOptions.map(jp => `<option value="${jp}">${jp}</option>`).join('')}
       </select>
       <div id="bulk-result-${idx}" style="margin-top:10px; font-weight:bold; display:none;"></div>
@@ -2437,4 +2514,3 @@ window.onload = init;
 </script>
 </body>
 </html>
-
