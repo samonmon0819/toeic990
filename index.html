@@ -44,14 +44,14 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    padding-bottom: calc(20px + var(--safe-bottom));
+    padding-bottom: calc(10px + var(--safe-bottom)); /* 下部余白を削減 */
   }
 
   .content-padding {
     padding: 20px 20px calc(80px + var(--safe-bottom)) 20px;
   }
   
-  /* ★修正: クイズ画面の下部余白を小さく調整 */
+  /* ★修正: クイズ画面の下部余白を極小に */
   #quiz-screen.content-padding {
     padding-bottom: calc(5px + var(--safe-bottom)) !important;
   }
@@ -72,6 +72,7 @@
     background: #ffffff; border: none; padding: 20px 15px; border-radius: 18px; text-align: center;
     box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.1s; cursor: pointer;
     display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;
+    will-change: transform;
   }
   .menu-btn:active { transform: scale(0.96); background: #f2f2f7; }
   
@@ -114,6 +115,7 @@
     position: sticky; top: 0; z-index: 100; width: 100%;
     background: #FFFFFF; border-bottom: 0.5px solid rgba(0,0,0,0.1);
     box-shadow: 0 2px 8px rgba(0,0,0,0.03); transition: transform 0.2s ease-out;
+    transform: translateZ(0);
   }
   .header-nav {
     display: flex; justify-content: space-between; align-items: center;
@@ -136,7 +138,7 @@
 
   /* --- LIST ITEMS --- */
   .list-container { padding: 0 20px; }
-  .list-item { padding: 16px 0; border-bottom: 0.5px solid rgba(0,0,0,0.1); }
+  .list-item { padding: 16px 0; border-bottom: 0.5px solid rgba(0,0,0,0.1); content-visibility: auto; contain-intrinsic-size: 100px; }
   .list-id-top { font-size: 11px; color: var(--text-sub); font-weight: 600; margin-bottom: 4px; display: block; letter-spacing: 0.5px; }
   .list-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
   .list-en { font-size: 22px; font-weight: 700; color: var(--text-main); letter-spacing: -0.3px; }
@@ -189,6 +191,16 @@
   .option-btn.wrong { background: #FFEBEA; border-color: var(--wrong); color: #C41C10; }
   .option-btn:disabled { opacity: 1.0; pointer-events: none; }
 
+  /* Weak Mode Buttons */
+  .weak-action-area {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px dashed #C6C6C8;
+  }
+
   /* Result List Layout */
   .result-list { margin-top: 20px; text-align: center; border-top: 1px solid #E5E5EA; }
   .result-item { 
@@ -201,45 +213,29 @@
   .ri-en { font-weight: 800; color: var(--wrong); font-size: 20px; letter-spacing: -0.5px; }
   .ri-jp { font-size: 16px; color: var(--text-main); flex: 1; text-align: right; margin-left: 20px;}
 
-  /* MODAL (修正版：アニメーション不具合対応) */
+  /* MODAL */
   .modal-overlay { 
     position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
     background: rgba(0,0,0,0.4); z-index: 1000; 
     display: flex; align-items: center; justify-content: center; 
     backdrop-filter: blur(4px); 
     -webkit-backdrop-filter: blur(4px);
-    
-    /* 初期状態は非表示 */
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.2s ease-out;
   }
-  /* 表示用のクラス */
-  .modal-overlay.active {
-    opacity: 1;
-    pointer-events: auto;
-  }
+  .modal-overlay.active { opacity: 1; pointer-events: auto; }
   
   .modal-box { 
     background: white; padding: 24px; border-radius: 20px; 
     width: 85%; max-width: 340px; text-align: center; 
     box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
     display: flex; flex-direction: column; max-height: 80vh; 
-    
-    /* 初期状態: 透明＆少し小さい */
-    opacity: 0;
-    transform: scale(0.95);
+    opacity: 0; transform: scale(0.95);
   }
   
-  /* 表示時のアニメーション用クラス */
-  .modal-box.active {
-    animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both;
-  }
-  
-  /* 閉じる時のアニメーション用クラス */
-  .modal-box.closing { 
-    animation: popOut 0.2s forwards; 
-  }
+  .modal-box.active { animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both; }
+  .modal-box.closing { animation: popOut 0.2s forwards; }
 
   .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 15px; color: var(--text-main); flex-shrink: 0; }
   .modal-desc { font-size: 14px; color: var(--text-sub); margin-bottom: 20px; line-height: 1.5; }
@@ -285,7 +281,7 @@
       <span class="weak-count" id="weak-count">0</span>
       <div class="weak-actions">
         <button class="btn-action danger" onclick="startWeakMode()">🔥 苦手特訓</button>
-        <button class="btn-action secondary" onclick="showList()">📖 リスト</button>
+        <button class="btn-action secondary" onclick="showList()">📖 苦手リスト</button>
       </div>
     </div>
 
@@ -347,7 +343,7 @@
         </div>
         <div class="input-wrapper">
           <span class="search-icon">🔍</span>
-          <input type="text" id="search-input" class="search-input" placeholder="単語または意味を検索" oninput="applyFilters()">
+          <input type="text" id="search-input" class="search-input" placeholder="単語または意味を検索" oninput="onSearchInput()">
         </div>
         
         <div class="mask-controls">
@@ -395,10 +391,15 @@
         <div id="fb-hint" style="font-size:14px; color:var(--text-main); margin-top:8px;"></div>
       </div>
       
-      <button class="btn-action" onclick="nextQ()" style="width:100%;">次へ ➔</button>
+      <div id="weak-action-area" class="weak-action-area" style="display:none;">
+        <button class="btn-action secondary" onclick="weakActionKeep()">まだ残す</button>
+        <button class="btn-action correct" style="background:var(--correct); color:white; border:none;" onclick="weakActionRemove()">✅ 克服</button>
+      </div>
+
+      <button id="next-q-btn" class="btn-action" onclick="nextQ()" style="width:100%;">次へ ➔</button>
     </div>
 
-    <div style="margin-top: 20px; text-align: left; padding-bottom: 0;">
+    <div style="margin-top: 10px; text-align: left; padding-bottom: 0;">
       <button id="prev-btn" class="btn-action secondary" onclick="prevQ()" style="display:none; width: auto; padding: 10px 20px;">
         ← 前へ
       </button>
@@ -1633,6 +1634,12 @@ let isHintHidden = false;
 let wrongAnswers = []; 
 let userAnswers = [];
 let quizHistory = []; 
+let currentCorrectId = null; // 苦手モードで正解したIDを一時保存
+
+// ★検索画面の無限スクロール用変数
+let currentSearchList = [];
+let loadedCount = 0;
+const BATCH_SIZE = 50; // 一度に読み込む数
 
 function init() {
   loadWeakData();
@@ -1642,6 +1649,16 @@ function init() {
   const rf = document.getElementById('range-filter');
   if(rf) rf.value = "all";
   applyFilters();
+  
+  // 無限スクロール監視
+  window.addEventListener('scroll', () => {
+    if(document.getElementById('search-screen').classList.contains('hidden')) return;
+    
+    // ページ下部に近づいたら追加読み込み
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500) {
+      loadMoreSearchResults();
+    }
+  });
 }
 
 function loadWeakData() {
@@ -1690,10 +1707,10 @@ function setupScrollBehavior() {
         const offset = scrollTop > 60 && scrollTop > lastScrollTop ? '-120%' : '0';
         
         if(!document.getElementById('search-screen').classList.contains('hidden')) {
-           stickyHeader.style.transform = `translateY(${offset})`;
+           stickyHeader.style.transform = `translate3d(0, ${offset}, 0)`;
         }
         else if(!document.getElementById('list-screen').classList.contains('hidden')) {
-           stickyHeaderList.style.transform = `translateY(${offset})`;
+           stickyHeaderList.style.transform = `translate3d(0, ${offset}, 0)`;
         }
         
         lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
@@ -1706,12 +1723,10 @@ function setupScrollBehavior() {
 
 // Navigation
 function showScreen(id) {
-  // ★修正：画面遷移時にモーダルも強制的に閉じておく（念のため）
+  // ★画面遷移時にモーダルも強制的に閉じておく
   document.querySelectorAll('.modal-overlay').forEach(el => {
-    el.classList.remove('active', 'hidden'); // 一旦全てリセット
-    // hiddenを付けるべきか？初期状態に戻す
+    el.classList.remove('active', 'hidden'); 
     el.classList.remove('active');
-    // アニメーション中のクラスも消す
     const box = el.querySelector('.modal-box');
     if(box) box.classList.remove('active', 'closing');
   });
@@ -1739,6 +1754,13 @@ function speak(text) {
 }
 
 // --- SEARCH & WORD BOOK ---
+let searchTimeout;
+function onSearchInput() {
+  // ★高速化：入力のたびに処理せず、300ms待ってから処理（デバウンス）
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(applyFilters, 300);
+}
+
 function showSearch() {
   showScreen('search-screen');
   document.getElementById('search-input').value = "";
@@ -1756,9 +1778,34 @@ function setMaskMode(mode) {
     const btnWeak = document.getElementById(`mask-${mode}-weak`);
     if(btnWeak) btnWeak.classList.add('active');
   }
-  if(!document.getElementById('search-screen').classList.contains('hidden')) applyFilters();
-  if(!document.getElementById('list-screen').classList.contains('hidden')) applyWeakFilters();
+  
+  // マスクモード切替時、すでに表示されているアイテムのクラスを書き換えるだけで済むように
+  // 全再描画ではなくCSSクラス操作を行う
+  if(!document.getElementById('search-screen').classList.contains('hidden')) {
+      updateMaskClasses('search-results');
+  }
+  if(!document.getElementById('list-screen').classList.contains('hidden')) {
+      updateMaskClasses('list-content');
+  }
 }
+
+// ★追加：DOMを再生成せずにマスク状態だけ更新する関数
+function updateMaskClasses(containerId) {
+    const con = document.getElementById(containerId);
+    const enEls = con.querySelectorAll('.list-en');
+    const jpEls = con.querySelectorAll('.list-jp');
+    
+    enEls.forEach(el => {
+        if(maskMode === 'en') el.classList.add('masked');
+        else el.classList.remove('masked', 'revealed');
+    });
+    
+    jpEls.forEach(el => {
+        if(maskMode === 'jp') el.classList.add('masked');
+        else el.classList.remove('masked', 'revealed');
+    });
+}
+
 
 function toggleMask(target) {
   if(maskMode === target) setMaskMode('none');
@@ -1775,7 +1822,10 @@ function toggleListHints() {
   const btn = document.getElementById('hint-toggle');
   if(isHintHidden) btn.classList.add('active');
   else btn.classList.remove('active');
-  applyFilters();
+  
+  // ヒントもDOM再生成せずクラス操作で切り替え
+  const hints = document.querySelectorAll('#search-results .list-hint');
+  hints.forEach(h => isHintHidden ? h.classList.add('hidden') : h.classList.remove('hidden'));
 }
 
 function toggleListHintsWeak() {
@@ -1783,7 +1833,9 @@ function toggleListHintsWeak() {
   const btn = document.getElementById('hint-toggle-weak');
   if(isHintHidden) btn.classList.add('active');
   else btn.classList.remove('active');
-  applyWeakFilters();
+  
+  const hints = document.querySelectorAll('#list-content .list-hint');
+  hints.forEach(h => isHintHidden ? h.classList.add('hidden') : h.classList.remove('hidden'));
 }
 
 function applyFilters() {
@@ -1797,41 +1849,57 @@ function applyFilters() {
   if(searchVal) {
     list = list.filter(d => d.en.toLowerCase().includes(searchVal) || d.jp.includes(searchVal));
   }
-  renderSearchResults(list);
-}
-
-function renderSearchResults(list) {
+  
+  // ★全件表示に戻すが、一度に描画するのは50件ずつ（無限スクロール）
+  currentSearchList = list;
+  loadedCount = 0;
+  
   const con = document.getElementById('search-results');
-  con.innerHTML = "";
+  con.innerHTML = ""; // リセット
+  
   if(list.length === 0) {
     con.innerHTML = "<div style='padding:40px; text-align:center; color:#94a3b8;'>見つかりません</div>";
     return;
   }
-  list.forEach(d => {
-    const div = document.createElement('div');
-    div.className = 'list-item';
-    const enClass = maskMode === 'en' ? 'masked' : '';
-    const jpClass = maskMode === 'jp' ? 'masked' : '';
-    const hintClass = isHintHidden ? 'hidden' : '';
-    
-    const isWeak = weakIDs.includes(d.id);
-    const btnText = isWeak ? "✔ 克服" : "+ 苦手";
-    const btnClass = isWeak ? "is-weak" : "is-not-weak";
+  
+  loadMoreSearchResults(); // 最初のバッチを読み込む
+}
 
-    div.innerHTML = `
-      <span class="list-id-top">No.${d.id}</span>
-      <div class="list-top">
-        <span class="list-en ${enClass}" onclick="toggleReveal(this)">${d.en}</span>
-        <button class="audio-btn" onclick="speak('${d.en}')">🔊</button>
-      </div>
-      <div class="list-jp ${jpClass}" onclick="toggleReveal(this)">${d.jp}</div>
-      <div class="hint-row">
-        <div class="list-hint ${hintClass}">${d.hint}</div>
-        <button id="wb-btn-${d.id}" class="weak-toggle-btn ${btnClass}" onclick="toggleWeak(${d.id})">${btnText}</button>
-      </div>
-    `;
-    con.appendChild(div);
-  });
+// ★追加：分割読み込み関数
+function loadMoreSearchResults() {
+    if(loadedCount >= currentSearchList.length) return;
+    
+    const nextBatch = currentSearchList.slice(loadedCount, loadedCount + BATCH_SIZE);
+    const fragment = document.createDocumentFragment();
+    
+    nextBatch.forEach(d => {
+        const div = document.createElement('div');
+        div.className = 'list-item';
+        const enClass = maskMode === 'en' ? 'masked' : '';
+        const jpClass = maskMode === 'jp' ? 'masked' : '';
+        const hintClass = isHintHidden ? 'hidden' : '';
+        
+        const isWeak = weakIDs.includes(d.id);
+        const btnText = isWeak ? "✔ 克服" : "+ 苦手";
+        const btnClass = isWeak ? "is-weak" : "is-not-weak";
+
+        div.innerHTML = `
+          <span class="list-id-top">No.${d.id}</span>
+          <div class="list-top">
+            <span class="list-en ${enClass}" onclick="toggleReveal(this)">${d.en}</span>
+            <button class="audio-btn" onclick="speak('${d.en}')">🔊</button>
+          </div>
+          <div class="list-jp ${jpClass}" onclick="toggleReveal(this)">${d.jp}</div>
+          <div class="hint-row">
+            <div class="list-hint ${hintClass}">${d.hint}</div>
+            <button id="wb-btn-${d.id}" class="weak-toggle-btn ${btnClass}" onclick="toggleWeak(${d.id})">${btnText}</button>
+          </div>
+        `;
+        fragment.appendChild(div);
+    });
+    
+    document.getElementById('search-results').appendChild(fragment);
+    loadedCount += BATCH_SIZE;
 }
 
 function toggleReveal(el) {
@@ -1892,6 +1960,8 @@ function renderWeakResults(list) {
     return;
   }
   
+  const fragment = document.createDocumentFragment();
+
   list.forEach(d => {
     const div = document.createElement('div');
     div.className = 'list-item';
@@ -1912,8 +1982,9 @@ function renderWeakResults(list) {
         <button class="weak-toggle-btn is-weak" onclick="toggleWeak(${d.id})">✔ 克服</button>
       </div>
     `;
-    con.appendChild(div);
+    fragment.appendChild(div);
   });
+  con.appendChild(fragment);
 }
 
 function showLevels(count) {
@@ -1938,14 +2009,10 @@ function showLevels(count) {
     container.appendChild(btn);
   }
   
-  // ★修正：モーダル表示処理
   const overlay = document.getElementById('course-modal');
   const box = overlay.querySelector('.modal-box');
   overlay.classList.remove('hidden');
-  
-  // 確実にアニメーションさせるためのリフローハック
   void overlay.offsetWidth; 
-  
   overlay.classList.add('active');
   box.classList.add('active');
 }
@@ -1968,7 +2035,6 @@ function showRandomModes() {
     container.appendChild(btn);
   });
   
-  // ★修正：モーダル表示処理
   const overlay = document.getElementById('course-modal');
   const box = overlay.querySelector('.modal-box');
   overlay.classList.remove('hidden');
@@ -1982,7 +2048,6 @@ function closeCourseModal(e) {
   const overlay = document.getElementById('course-modal');
   const box = overlay.querySelector('.modal-box');
   
-  // ★修正：閉じるアニメーション処理
   box.classList.remove('active');
   box.classList.add('closing');
   overlay.classList.remove('active');
@@ -2022,7 +2087,6 @@ function showConfusingOptions() {
     }
   });
   
-  // ★修正：モーダル表示処理
   const overlay = document.getElementById('course-modal');
   const box = overlay.querySelector('.modal-box');
   overlay.classList.remove('hidden');
@@ -2044,7 +2108,6 @@ let pendingQuizCallback = null;
 function triggerQuizStart(mode, label, params) {
   const savedState = localStorage.getItem(RESUME_KEY);
   
-  // 開始用コールバック（新規開始）
   const startNewAction = () => {
     isWeakMode = (mode === 'weak');
     let pool = [];
@@ -2076,7 +2139,6 @@ function triggerQuizStart(mode, label, params) {
     if(state.label === label && state.mode !== 'bulk') {
       pendingQuizCallback = startNewAction;
       
-      // ★修正：レジュームモーダル表示処理
       const overlay = document.getElementById('resume-modal');
       const box = overlay.querySelector('.modal-box');
       overlay.classList.remove('hidden');
@@ -2107,7 +2169,6 @@ function startBulkTest(count) {
     if (state.mode === 'bulk') {
        pendingQuizCallback = startNewBulk;
        
-       // ★修正：レジュームモーダル表示処理
        const overlay = document.getElementById('resume-modal');
        const box = overlay.querySelector('.modal-box');
        overlay.classList.remove('hidden');
@@ -2195,6 +2256,7 @@ function showQuestion(isReview = false) {
   
   document.getElementById('feedback').style.display = 'none';
   document.getElementById('options').innerHTML = "";
+  document.getElementById('weak-action-area').style.display = 'none'; // リセット
   
   const prevBtn = document.getElementById('prev-btn');
   if (prevBtn) {
@@ -2296,7 +2358,6 @@ function checkAnswer(selected, correct) {
 
   for(let btn of opts) {
     btn.disabled = true;
-    
     const wId = parseInt(btn.dataset.id);
     const wData = rawData.find(d => d.id === wId);
     let enText = "";
@@ -2304,23 +2365,31 @@ function checkAnswer(selected, correct) {
     
     if(btn.innerText === correct.jp) btn.classList.add('correct');
     if(btn.innerText === selected.jp && selected.id !== correct.id) btn.classList.add('wrong');
-    
     btn.innerHTML = `<span>${btn.innerText}</span> <span style="font-size:16px; opacity:0.8; font-weight:normal;">${enText}</span>`;
   }
 
   const fb = document.getElementById('feedback');
   const fbMsg = document.getElementById('fb-msg');
+  const weakActionArea = document.getElementById('weak-action-area');
   
   if(selected.id === correct.id) {
     score++;
     fbMsg.innerText = "正解! 🎉";
     fbMsg.style.color = "var(--correct)";
-    if(isWeakMode) toggleWeak(correct.id); 
+    
+    // ★苦手モードなら、選択肢を表示する
+    if(isWeakMode) {
+      currentCorrectId = correct.id;
+      weakActionArea.style.display = 'grid';
+      document.getElementById('next-q-btn').style.display = 'none'; // 次へボタンを隠して、選択を強制する
+    }
   } else {
     fbMsg.innerText = "不正解... 😢";
     fbMsg.style.color = "var(--wrong)";
     wrongAnswers.push(correct);
     if(!weakIDs.includes(correct.id)) toggleWeak(correct.id);
+    weakActionArea.style.display = 'none';
+    document.getElementById('next-q-btn').style.display = 'block';
   }
 
   document.getElementById('fb-correct').innerText = `${correct.en} : ${correct.jp}`;
@@ -2328,10 +2397,23 @@ function checkAnswer(selected, correct) {
   fb.style.display = 'block';
   
   if(currentQuestions._label) saveQuizState();
+  setTimeout(() => { fb.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 100);
+}
 
-  setTimeout(() => {
-    fb.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }, 100);
+// 苦手モードのアクション
+function weakActionKeep() {
+  document.getElementById('next-q-btn').style.display = 'block';
+  document.getElementById('weak-action-area').style.display = 'none';
+  nextQ();
+}
+
+function weakActionRemove() {
+  if(currentCorrectId !== null) {
+    toggleWeak(currentCorrectId); // 削除
+  }
+  document.getElementById('next-q-btn').style.display = 'block';
+  document.getElementById('weak-action-area').style.display = 'none';
+  nextQ();
 }
 
 function saveQuizState() {
@@ -2358,7 +2440,7 @@ function nextQ() {
   }
 }
 
-// --- BULK TEST LOGIC (SORTED BY KANA) ---
+// --- BULK TEST LOGIC (OPTIMIZED) ---
 
 function renderBulkTest() {
   const con = document.getElementById('bulk-test-list');
@@ -2369,15 +2451,10 @@ function renderBulkTest() {
   document.getElementById('bulk-grade-btn').style.display = 'block';
   document.getElementById('bulk-home-btn').style.display = 'none';
 
-  // ★「ふりがな」を使って問題を並べ替えるのではなく、
-  //   問題(Q1, Q2...)の順番はそのまま、選択肢(プルダウン)の中身をあいうえお順にする
-
-  // まず現在の問題に含まれる全選択肢（の日本語）を取得し、重複を排除
+  // ★超高速化：選択肢のHTML文字列をループの外で1回だけ作る
   const uniqueJpOptions = Array.from(new Set(currentQuestions.map(q => q.jp)));
-
-  // その日本語リストを「ふりがな順」にソート
+  
   uniqueJpOptions.sort((jpA, jpB) => {
-    // rawDataから該当する単語データを検索してkanaを取得
     const itemA = rawData.find(d => d.jp === jpA);
     const itemB = rawData.find(d => d.jp === jpB);
     const kA = itemA ? (itemA.kana || itemA.jp) : jpA;
@@ -2385,21 +2462,28 @@ function renderBulkTest() {
     return kA.localeCompare(kB, 'ja');
   });
 
+  const optionsHTML = uniqueJpOptions.map(jp => `<option value="${jp}">${jp}</option>`).join('');
+
+  // フラグメントを使用
+  const fragment = document.createDocumentFragment();
+
   currentQuestions.forEach((q, idx) => {
     const div = document.createElement('div');
-    div.style = "margin-bottom:30px; padding:15px; border-bottom:1px solid #eee;";
+    div.style = "margin-bottom:30px; padding:15px; border-bottom:1px solid #eee; content-visibility: auto;"; // 表示最適化
     div.innerHTML = `
       <div style="font-size:14px; color:var(--text-sub); font-weight:bold; margin-bottom:5px;">Q${idx+1}. (No.${q.id})</div>
       <div style="font-size:24px; font-weight:800; margin-bottom:15px; color:var(--text-main);">${q.en}</div>
       
       <select id="bulk-select-${idx}" onchange="recordBulkAnswer(${idx}, this.value)" style="width:100%; padding:12px; border-radius:12px; border:1px solid var(--border); font-size:16px; background:#fff; appearance:none;">
-        <option value="">選択してください</option>
-        ${uniqueJpOptions.map(jp => `<option value="${jp}">${jp}</option>`).join('')}
+        <option value="">選択してください（50音順）</option>
+        ${optionsHTML}
       </select>
       <div id="bulk-result-${idx}" style="margin-top:10px; font-weight:bold; display:none;"></div>
     `;
-    con.appendChild(div);
+    fragment.appendChild(div);
   });
+  
+  con.appendChild(fragment);
 }
 
 function restoreBulkTest() {
@@ -2487,7 +2571,7 @@ function showResult() {
   else txt = "復習して、苦手をなくしましょう！💪";
   
   document.getElementById('result-msg').innerText = txt;
-  document.getElementById('weak-msg').innerText = isWeakMode ? `今回、苦手リストから正解した単語はリストから外しました！` : "";
+  document.getElementById('weak-msg').innerText = "";
 
   const wc = document.getElementById('wrong-container');
   const wl = document.getElementById('wrong-list');
