@@ -2493,7 +2493,7 @@ function renderBulkTest() {
       <div style="font-size:24px; font-weight:800; margin-bottom:15px; color:var(--text-main);">${q.en}</div>
       
       <select id="bulk-select-${idx}" onchange="recordBulkAnswer(${idx}, this.value)" style="width:100%; padding:12px; border-radius:12px; border:1px solid var(--border); font-size:16px; background:#fff; appearance:none;">
-        <option value="">選択してください</option>
+        <option value="">選択してください（50音順）</option>
         ${optionsHTML}
       </select>
       <div id="bulk-result-${idx}" style="margin-top:10px; font-weight:bold; display:none;"></div>
@@ -2616,3 +2616,4 @@ window.onload = init;
 </script>
 </body>
 </html>
+
